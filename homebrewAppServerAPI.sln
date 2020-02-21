@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homebrewAppServerAPI", "homebrewAppServerAPI\homebrewAppServerAPI.csproj", "{A6469C38-3AC7-47FB-A81E-67182BE4DE84}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6469C38-3AC7-47FB-A81E-67182BE4DE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6469C38-3AC7-47FB-A81E-67182BE4DE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6469C38-3AC7-47FB-A81E-67182BE4DE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6469C38-3AC7-47FB-A81E-67182BE4DE84}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D6D59B5-74AA-45BD-9391-E703297E3C71}
+	EndGlobalSection
+EndGlobal
