@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cclar\\source\\repos\\homebrewAppServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj": {}
+    "C:\\Users\\cclar\\source\\repos\\homebrewappServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cclar\\source\\repos\\homebrewAppServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj": {
+    "C:\\Users\\cclar\\source\\repos\\homebrewappServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cclar\\source\\repos\\homebrewAppServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj",
+        "projectUniqueName": "C:\\Users\\cclar\\source\\repos\\homebrewappServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj",
         "projectName": "homebrewAppServerAPI",
-        "projectPath": "C:\\Users\\cclar\\source\\repos\\homebrewAppServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj",
+        "projectPath": "C:\\Users\\cclar\\source\\repos\\homebrewappServerAPI\\homebrewAppServerAPI\\homebrewAppServerAPI.csproj",
         "packagesPath": "C:\\Users\\cclar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cclar\\source\\repos\\homebrewAppServerAPI\\homebrewAppServerAPI\\obj\\",
+        "outputPath": "C:\\Users\\cclar\\source\\repos\\homebrewappServerAPI\\homebrewAppServerAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\cclar\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -37,6 +37,16 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
