@@ -33,4 +33,6 @@ C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\AutoMapper.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\obj\Debug\netcoreapp3.1\homebrewAppServerAPI.MvcApplicationPartsAssemblyInfo.cache
