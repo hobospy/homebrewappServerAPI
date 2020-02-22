@@ -1,4 +1,5 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
+using homebrewAppServerAPI.Domain.Services.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace homebrewAppServerAPI.Domain.Services
     public interface IBrewService
     {
         Task<IEnumerable<Brew>> ListAsync();
+        Task<SaveBrewResponse> SaveAsync(Brew brew);
     }
 }

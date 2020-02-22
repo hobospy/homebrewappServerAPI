@@ -9,5 +9,6 @@ namespace homebrewAppServerAPI.Domain.Repositories
     public interface IBrewRepository
     {
         Task<IEnumerable<Brew>> ListAsync();
+        Task AddAsync(Brew brew);
     }
 }

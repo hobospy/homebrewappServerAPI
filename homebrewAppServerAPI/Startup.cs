@@ -38,6 +38,7 @@ namespace homebrewAppServerAPI
             services.AddScoped<IBrewRepository, BrewRepository>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IBrewService, BrewService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper(typeof(Startup));
         }

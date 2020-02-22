@@ -15,5 +15,10 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         {
             return await _context.Brews.ToListAsync();
         }
+
+        public async Task AddAsync(Brew brew)
+        {
+            await _context.Brews.AddAsync(brew);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
+using homebrewAppServerAPI.Extensions;
 using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -46,6 +47,28 @@ namespace homebrewAppServerAPI.Controllers
             var resources = _mapper.Map<IEnumerable<Recipe>, IEnumerable<RecipeResource>>(recipes);
 
             return resources;
+        }
+
+        // POST HomeBrewApp
+        [HttpPost]
+        [Route("NewBrew")]
+        public async Task<IActionResult> PostBrewAsync([FromBody] SaveBrewResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var brew = _mapper.Map<SaveBrewResource, Brew>(resource);
+            var result = await _brewService.SaveAsync(brew);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
+            return Ok(brewResource);
         }
     }
 }
