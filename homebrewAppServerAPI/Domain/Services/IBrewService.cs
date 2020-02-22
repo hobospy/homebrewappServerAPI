@@ -10,6 +10,8 @@ namespace homebrewAppServerAPI.Domain.Services
     public interface IBrewService
     {
         Task<IEnumerable<Brew>> ListAsync();
-        Task<SaveBrewResponse> SaveAsync(Brew brew);
+        Task<BrewResponse> SaveAsync(Brew brew);
+        Task<BrewResponse> UpdateAsync(int id, Brew brew);
+        Task<BrewResponse> DeleteAsync(int id);
     }
 }

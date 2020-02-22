@@ -10,5 +10,8 @@ namespace homebrewAppServerAPI.Domain.Repositories
     {
         Task<IEnumerable<Brew>> ListAsync();
         Task AddAsync(Brew brew);
+        Task<Brew> FindByIdAsync(int id);
+        void Update(Brew brew);
+        void Remove(Brew brew);
     }
 }

@@ -20,5 +20,20 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         {
             await _context.Brews.AddAsync(brew);
         }
+
+        public async Task<Brew> FindByIdAsync(int id)
+        {
+            return await _context.Brews.FindAsync(id);
+        }
+
+        public void Update(Brew brew)
+        {
+            _context.Brews.Update(brew);
+        }
+
+        public void Remove(Brew brew)
+        {
+            _context.Brews.Remove(brew);
+        }
     }
 }

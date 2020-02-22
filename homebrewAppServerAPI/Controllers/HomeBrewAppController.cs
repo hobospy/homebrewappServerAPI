@@ -51,7 +51,7 @@ namespace homebrewAppServerAPI.Controllers
 
         // POST HomeBrewApp
         [HttpPost]
-        [Route("NewBrew")]
+        [Route("Brew")]
         public async Task<IActionResult> PostBrewAsync([FromBody] SaveBrewResource resource)
         {
             if (!ModelState.IsValid)
@@ -69,6 +69,66 @@ namespace homebrewAppServerAPI.Controllers
 
             var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
             return Ok(brewResource);
+        }
+
+        // PUT HomeBrewApp
+        [HttpPut]
+        [Route("Brew/{id}")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveBrewResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var brew = _mapper.Map <SaveBrewResource, Brew> (resource);
+            var result = await _brewService.UpdateAsync(id, brew);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
+            return Ok(brewResource);
+        }
+
+        // DELETE HomeBrewApp
+        [HttpDelete]
+        [Route("Brew/{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _brewService.DeleteAsync(id);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
+            return Ok(brewResource);
+        }
+
+        // POST HomeBrewApp
+        [HttpPost]
+        [Route("Recipe")]
+        public async Task<IActionResult> PostRecipeAsync([FromBody] SaveRecipeResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var recipe = _mapper.Map<SaveRecipeResource, Recipe>(resource);
+            var result = await _recipeService.SaveAsync(recipe);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+            return Ok(recipeResource);
         }
     }
 }
