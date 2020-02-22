@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Controllers
 {
+    // SHOULD REFACTOR THIS - BREWCONTROLLER AND RECIPECONTROLLER
+
+
     [Route("[controller]")]
     [ApiController]
     public class HomeBrewAppController : ControllerBase
@@ -74,7 +77,7 @@ namespace homebrewAppServerAPI.Controllers
         // PUT HomeBrewApp
         [HttpPut]
         [Route("Brew/{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveBrewResource resource)
+        public async Task<IActionResult> PutBrewAsync(int id, [FromBody] SaveBrewResource resource)
         {
             if (!ModelState.IsValid)
             {
@@ -96,7 +99,7 @@ namespace homebrewAppServerAPI.Controllers
         // DELETE HomeBrewApp
         [HttpDelete]
         [Route("Brew/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteBrewAsync(int id)
         {
             var result = await _brewService.DeleteAsync(id);
 
@@ -121,6 +124,44 @@ namespace homebrewAppServerAPI.Controllers
 
             var recipe = _mapper.Map<SaveRecipeResource, Recipe>(resource);
             var result = await _recipeService.SaveAsync(recipe);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+            return Ok(recipeResource);
+        }
+
+        // PUT HomeBrewApp
+        [HttpPut]
+        [Route("Recipe/{id}")]
+        public async Task<IActionResult> PutRecipeAsync(int id, [FromBody] SaveRecipeResource resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var recipe = _mapper.Map<SaveRecipeResource, Recipe>(resource);
+            var result = await _recipeService.UpdateAsync(id, recipe);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+            return Ok(recipeResource);
+        }
+
+        // DELETE HomeBrewApp
+        [HttpDelete]
+        [Route("Recipe/{id}")]
+        public async Task<IActionResult> DeleteRecipeAsync(int id)
+        {
+            var result = await _recipeService.DeleteAsync(id);
 
             if (!result.Success)
             {

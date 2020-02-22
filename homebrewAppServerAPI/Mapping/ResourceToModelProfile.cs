@@ -9,6 +9,7 @@ namespace homebrewAppServerAPI.Mapping
         public ResourceToModelProfile()
         {
             CreateMap<SaveBrewResource, Brew>();
+            CreateMap<SaveRecipeResource, Recipe>();
         }
     }
 }
