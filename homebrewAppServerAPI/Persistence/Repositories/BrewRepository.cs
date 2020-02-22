@@ -13,7 +13,7 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task<IEnumerable<Brew>> ListAsync()
         {
-            return await _context.Brews.ToListAsync();
+            return await _context.Brews.Include(p => p.Recipe).ToListAsync();
         }
 
         public async Task AddAsync(Brew brew)

@@ -58,14 +58,6 @@ namespace homebrewAppServerAPI
 
             app.UseHttpsRedirection();
             app.UseMvc();
-            //app.UseStaticFiles();
-
-            //app.UseRouting();
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
         }
     }
 }
