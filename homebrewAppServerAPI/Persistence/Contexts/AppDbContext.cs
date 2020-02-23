@@ -28,35 +28,35 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                     {
                         ID = 1000,
                         Name = "Brothers Kolsch Ripoff",
-                        Type = "Kolsch",
+                        Type = ETypeOfBeer.KolschAlt,
                         Description = "Kolsch is a unique style in that it is fermented with ale yeast, but then finished with lagering. The result is the best of both worlds: A light easy drinking pale that finishes crisp and clean. The most basic way to separate beers into different styles is by yeast. By far, the two largest groups are ales and lagers."
                     },
                     new Recipe
                     {
                         ID = 1001,
                         Name = "Amarillo SMaSH",
-                        Type = "APA",
+                        Type = ETypeOfBeer.AmericanAle,
                         Description = "Characterized by floral, fruity, citrus-like, piney, resinous American hops, the American pale ale is a medium-bodied beer with low to medium caramel, and carries with it a toasted maltiness."
                     },
                     new Recipe
                     {
                         ID = 1002,
                         Name = "Raspberry Brown Porter",
-                        Type = "Porter",
+                        Type = ETypeOfBeer.Porter,
                         Description = "A moderate-strength brown beer with a restrained roasty character and bitterness. May have a range of roasted flavors, generally without burnt qualities, and often has a chocolate-caramel-malty profile."
                     },
                     new Recipe
                     {
                         ID = 1003,
                         Name = "Pepper Saison",
-                        Type = "Saison",
+                        Type = ETypeOfBeer.BelStrongAle,
                         Description = "Saison (French, \"season,\" French pronunciation: ​[sɛ. zɔ̃]) is a pale ale that is highly carbonated, fruity, spicy, and often bottle conditioned. It was historically brewed with low alcohol levels, but modern productions of the style have moderate to high levels of alcohol."
                     },
                     new Recipe
                     {
                         ID = 1004,
                         Name = "White Peach Sour",
-                        Type = "Sour",
+                        Type = ETypeOfBeer.Sour,
                         Description = "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale."
                     }
                 );

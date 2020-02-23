@@ -9,7 +9,6 @@ namespace homebrewAppServerAPI.Domain.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public string Type { get; set; }
         public string TastingNotes { get; set; }
         public double ABV { get; set; }
         public double Rating { get; set; }

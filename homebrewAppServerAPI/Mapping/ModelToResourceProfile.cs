@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using homebrewAppServerAPI.Domain.Models;
+using homebrewAppServerAPI.Extensions;
 using homebrewAppServerAPI.Resources;
 
 namespace homebrewAppServerAPI.Mapping
@@ -8,7 +9,9 @@ namespace homebrewAppServerAPI.Mapping
     {
         public ModelToResourceProfile()
         {
-            CreateMap<Recipe, RecipeResource>();
+            CreateMap<Recipe, RecipeResource>()
+                .ForMember(src => src.Type,
+                           opt => opt.MapFrom(src => src.Type.ToDescriptionString()));
 
             CreateMap<Brew, BrewResource>();
         }
