@@ -35,4 +35,10 @@ C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.InMemory.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\AutoMapper.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\System.Web.Cors.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\System.Net.Http.Formatting.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\System.Web.Http.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\System.Web.Http.Cors.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 C:\Users\cclar\source\repos\homebrewappServerAPI\homebrewAppServerAPI\obj\Debug\netcoreapp3.1\homebrewAppServerAPI.MvcApplicationPartsAssemblyInfo.cache

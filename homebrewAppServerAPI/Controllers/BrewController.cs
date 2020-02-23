@@ -6,11 +6,13 @@ using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Http.Cors;
 
 namespace homebrewAppServerAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [EnableCors(origins: "http://localhost:3000/", headers: "*", methods: "*")]
     public class BrewController : ControllerBase
     {
         private readonly IBrewService _brewService;
