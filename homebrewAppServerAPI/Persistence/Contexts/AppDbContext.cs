@@ -65,13 +65,14 @@ namespace homebrewAppServerAPI.Persistence.Contexts
             builder.Entity<Brew>().HasKey(p => p.ID);
             builder.Entity<Brew>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
             builder.Entity<Brew>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<Brew>().Property(p => p.BrewDate).IsRequired();
             builder.Entity<Brew>().Property(p => p.ABV).IsRequired();
 
             builder.Entity<Brew>().HasData
                 (
-                    new Brew { ID = 1000, Name = "Brothers Kolsch Ripoff I", ABV = 5.5, RecipeID = 1000, Rating = 4.7 },
-                    new Brew { ID = 1001, Name = "Brothers Kolsch Ripoff II", ABV = 5.2, RecipeID = 1000, Rating = 4.8 },
-                    new Brew { ID = 1002, Name = "Amarillo SMaSH I", ABV = 4.7, RecipeID = 1001 }
+                    new Brew { ID = 1000, Name = "Brothers Kolsch Ripoff I", BrewDate = new System.DateTime(2019, 11, 13), ABV = 5.5, TastingNotes = "Not a million miles away from the real thing!", RecipeID = 1000, BrewFavourite = true },
+                    new Brew { ID = 1001, Name = "Brothers Kolsch Ripoff II", BrewDate = new System.DateTime(2019, 12, 24), ABV = 5.2, TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.", RecipeID = 1000, BrewFavourite = false },
+                    new Brew { ID = 1002, Name = "Amarillo SMaSH I", BrewDate = new System.DateTime(2020, 02, 07), ABV = 4.7, TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)", RecipeID = 1001 }
                 );
         }
     }
