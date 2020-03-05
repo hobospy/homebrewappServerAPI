@@ -36,7 +36,17 @@ namespace homebrewAppServerAPI.Controllers
             return resources;
         }
 
-        // POST Recipe
+        // Get Brew
+        [HttpGet("{id}")]
+        public async Task<BrewResource> GetBrewAsync(int id)
+        {
+            var brew = await _brewService.GetAsync(id);
+            var resource = _mapper.Map<Brew, BrewResource>(brew);
+
+            return resource;
+        }
+
+        // POST Brew
         [HttpPost]
         public async Task<IActionResult> PostBrewAsync([FromBody] SaveBrewResource resource)
         {
@@ -57,7 +67,7 @@ namespace homebrewAppServerAPI.Controllers
             return Ok(brewResource);
         }
 
-        // PUT Recipe
+        // PUT Brew
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBrewAsync(int id, [FromBody] SaveBrewResource resource)
         {
@@ -78,7 +88,7 @@ namespace homebrewAppServerAPI.Controllers
             return Ok(brewResource);
         }
 
-        // DELETE Recipe
+        // DELETE Brew
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrewAsync(int id)
         {

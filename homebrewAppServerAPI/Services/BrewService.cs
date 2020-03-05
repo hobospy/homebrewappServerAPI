@@ -25,6 +25,11 @@ namespace homebrewAppServerAPI.Services
             return await _brewRepository.ListAsync();
         }
 
+        public async Task<Brew> GetAsync(int id)
+        {
+            return await _brewRepository.FindByIdAsync(id);
+        }
+
         public async Task<BrewResponse> SaveAsync(Brew brew)
         {
             try

@@ -27,6 +27,15 @@ namespace homebrewAppServerAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("CorsPolicy",
+            //        builder => builder
+            //            .SetIsOriginAllowedToAllowWildcardSubdomains()
+            //            .WithOrigins("http://192.168.1.*:3000")
+            //            .AllowAnyMethod()
+            //        );
+            //});
             //services.AddControllers();
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
@@ -59,6 +68,9 @@ namespace homebrewAppServerAPI
 
             app.UseHttpsRedirection();
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
+            //app.UseCors(options => options.WithOrigins("http://192.168.1.*:3000").SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyMethod());
+            //app.UseCors(builder =>
+            //            builder.SetIsOriginAllowedToAllowWildcardSubdomains()
             app.UseMvc();
         }
     }
