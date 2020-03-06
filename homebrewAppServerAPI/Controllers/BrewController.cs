@@ -40,8 +40,8 @@ namespace homebrewAppServerAPI.Controllers
         [HttpGet("{id}")]
         public async Task<BrewResource> GetBrewAsync(int id)
         {
-            var brew = await _brewService.GetAsync(id);
-            var resource = _mapper.Map<Brew, BrewResource>(brew);
+            var brewResponse = await _brewService.GetAsync(id);
+            var resource = _mapper.Map<Brew, BrewResource>(brewResponse.Brew);
 
             return resource;
         }
