@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
+using homebrewAppServerAPI.Domain.Services.Communication;
 using homebrewAppServerAPI.Extensions;
 using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
@@ -41,8 +42,13 @@ namespace homebrewAppServerAPI.Controllers
         public async Task<BrewResource> GetBrewAsync(int id)
         {
             var brewResponse = await _brewService.GetAsync(id);
-            var resource = _mapper.Map<Brew, BrewResource>(brewResponse.Brew);
 
+            //if (!brewResponse.Success)
+            //{
+            //    return BadRequest(brewResponse.Message);
+            //}
+
+            var resource = _mapper.Map<Brew, BrewResource>(brewResponse.Brew);
             return resource;
         }
 

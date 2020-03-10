@@ -67,7 +67,8 @@ namespace homebrewAppServerAPI
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
+            //app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
             //app.UseCors(options => options.WithOrigins("http://192.168.1.*:3000").SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyMethod());
             //app.UseCors(builder =>
             //            builder.SetIsOriginAllowedToAllowWildcardSubdomains()
