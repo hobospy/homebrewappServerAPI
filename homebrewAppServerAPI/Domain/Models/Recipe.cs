@@ -15,6 +15,7 @@ namespace homebrewAppServerAPI.Domain.Models
         public double Rating { get; set; } = 0.0;
         public ETypeOfBeer Type { get; set; }
 
+        public int WaterID { get; set; }
         public WaterProfile WaterProfile { get; set; }
         public IList<Brew> Brews { get; set; }
     }

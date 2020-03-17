@@ -23,7 +23,7 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task<Brew> FindByIdAsync(int id)
         {
-            return await _context.Brews.Include(p => p.Recipe).FirstOrDefaultAsync();
+            return await _context.Brews.Include(p => p.Recipe).FirstOrDefaultAsync(brew => brew.ID == id);
         }
 
         public void Update(Brew brew)

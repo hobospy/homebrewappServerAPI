@@ -18,5 +18,7 @@ namespace homebrewAppServerAPI.Domain.Models
         public double BakingSoda { get; set; } = 0.0;
         [NotMapped]
         public Dictionary<string, double> AdditionalAduncts { get; set; }
+
+        public IList<Recipe> Recipes { get; set; }
     }
 }
