@@ -1,5 +1,6 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace homebrewAppServerAPI.Persistence.Contexts
 {
@@ -7,6 +8,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
     {
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<WaterProfile> WaterProfiles { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) :base(options) { }
 
@@ -46,6 +49,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
             builder.Entity<Recipe>().Property(p => p.Type).IsRequired();
             builder.Entity<Recipe>().Property(p => p.Description).IsRequired().HasMaxLength(500);
             builder.Entity<Recipe>().HasMany(p => p.Brews).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
+            builder.Entity<Recipe>().HasMany(p => p.Ingredients).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
 
             builder.Entity<Recipe>().HasData
                 (
@@ -105,9 +109,30 @@ namespace homebrewAppServerAPI.Persistence.Contexts
 
             builder.Entity<Brew>().HasData
                 (
-                    new Brew { ID = 3000, Name = "Brothers Kolsch Ripoff I", BrewDate = new System.DateTime(2019, 11, 13), ABV = 5.5, TastingNotes = "Not a million miles away from the real thing!", RecipeID = 2000, BrewFavourite = true },
+                    new Brew {
+                        ID = 3000,
+                        Name = "Brothers Kolsch Ripoff I",
+                        BrewDate = new System.DateTime(2019, 11, 13),
+                        ABV = 5.5,
+                        TastingNotes = "Not a million miles away from the real thing!",
+                        RecipeID = 2000,
+                        BrewFavourite = true },
                     new Brew { ID = 3001, Name = "Brothers Kolsch Ripoff II", BrewDate = new System.DateTime(2019, 12, 24), ABV = 5.2, TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.", RecipeID = 2000, BrewFavourite = false },
                     new Brew { ID = 3002, Name = "Amarillo SMaSH I", BrewDate = new System.DateTime(2020, 02, 07), ABV = 4.7, TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)", RecipeID = 2001 }
+                );
+
+            builder.Entity<Ingredient>().ToTable("Ingredients");
+            builder.Entity<Ingredient>().HasKey(p => p.ID);
+            builder.Entity<Ingredient>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
+            builder.Entity<Ingredient>().Property(p => p.Type).IsRequired();
+            builder.Entity<Ingredient>().Property(p => p.Name).IsRequired().HasMaxLength(50);
+            builder.Entity<Ingredient>().Property(p => p.Amount).IsRequired();
+
+            builder.Entity<Ingredient>().HasData
+                (
+                    new Ingredient{ ID = 5000, Type = ETypeOfIngredient.Grains, Name = "Pale ale malt", Amount = 5.1, RecipeID = 2000 },
+                    new Ingredient{ ID = 5001, Type = ETypeOfIngredient.Grains, Name = "Chocolate malt", Amount = 0.1, RecipeID = 2000 },
+                    new Ingredient{ ID = 5002, Type = ETypeOfIngredient.Hops, Name = "Amarillo", Amount = 0.04, RecipeID = 2000 }
                 );
         }
     }

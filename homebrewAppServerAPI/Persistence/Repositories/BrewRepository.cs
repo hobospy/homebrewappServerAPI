@@ -13,7 +13,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task<IEnumerable<Brew>> ListAsync()
         {
-            return await _context.Brews.Include(p => p.Recipe).ToListAsync();
+            return await _context.Brews
+                                    .Include(p => p.Recipe)
+                                    .Include(p => p.Recipe.WaterProfile)
+                                    .Include(p => p.Recipe.Ingredients)
+                                    .ToListAsync();
         }
 
         public async Task AddAsync(Brew brew)
@@ -23,7 +27,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task<Brew> FindByIdAsync(int id)
         {
-            return await _context.Brews.Include(p => p.Recipe).FirstOrDefaultAsync(brew => brew.ID == id);
+            return await _context.Brews
+                                    .Include(p => p.Recipe)
+                                    .Include(p => p.Recipe.WaterProfile)
+                                    .Include(p => p.Recipe.Ingredients)
+                                    .FirstOrDefaultAsync(brew => brew.ID == id);
         }
 
         public void Update(Brew brew)

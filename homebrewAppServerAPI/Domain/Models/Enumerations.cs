@@ -57,4 +57,14 @@ namespace homebrewAppServerAPI.Domain.Models
         [Description("Kolsch and altbier")]
         KolschAlt
     }
+
+    public enum ETypeOfIngredient
+    {
+        [Description("Grains")]
+        Grains,
+        [Description("Hops")]
+        Hops,
+        [Description("Adjuncts")]
+        Adjuncts
+    }
 }

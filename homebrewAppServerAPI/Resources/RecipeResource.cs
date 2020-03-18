@@ -1,4 +1,5 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
+using System.Collections.Generic;
 
 namespace homebrewAppServerAPI.Resources
 {
@@ -10,5 +11,7 @@ namespace homebrewAppServerAPI.Resources
         public string Description { get; set; }
         public double Rating { get; set; }
         public WaterProfileResource WaterProfile { get; set; }
+
+        public List<Ingredient> Ingredients { get; set; }
     }
 }

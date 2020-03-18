@@ -9,6 +9,12 @@ namespace homebrewAppServerAPI.Mapping
     {
         public ModelToResourceProfile()
         {
+            CreateMap<Ingredient, IngredientResource>()
+                .ForMember(src => src.Type,
+                           opt => opt.MapFrom(src => src.Type.ToDescriptionString()));
+
+            CreateMap<WaterProfile, WaterProfileResource>();
+
             CreateMap<Recipe, RecipeResource>()
                 .ForMember(src => src.Type,
                            opt => opt.MapFrom(src => src.Type.ToDescriptionString()));

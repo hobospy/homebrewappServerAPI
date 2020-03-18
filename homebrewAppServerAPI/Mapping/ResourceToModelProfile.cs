@@ -10,6 +10,7 @@ namespace homebrewAppServerAPI.Mapping
         {
             CreateMap<SaveBrewResource, Brew>();
             CreateMap<SaveRecipeResource, Recipe>();
+            CreateMap<WaterProfileResource, WaterProfile>();
         }
     }
 }
