@@ -41,10 +41,21 @@ namespace homebrewAppServerAPI.Services
         {
             try
             {
-                await _brewRepository.AddAsync(brew);
-                await _unitOfWork.CompleteAsync();
+                BrewResponse returnValue;
 
-                return new BrewResponse(brew);
+                if (brew != null)
+                {
+                    await _brewRepository.AddAsync(brew);
+                    await _unitOfWork.CompleteAsync();
+
+                    returnValue = new BrewResponse(brew);
+                }
+                else
+                {
+                    returnValue = new BrewResponse("Cannot save invalid brew.");
+                }
+
+                return returnValue;
             }
             catch (Exception ex)
             {
@@ -84,7 +95,7 @@ namespace homebrewAppServerAPI.Services
 
             if (existingBrew == null)
             {
-                return new BrewResponse("Brew not found");
+                return new BrewResponse("Brew not found.");
             }
 
             try
