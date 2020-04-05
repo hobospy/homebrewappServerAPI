@@ -10,7 +10,7 @@ namespace homebrewappServerAPI.Tests
     public class BrewControllerTests
     {
         [Test]
-        public async Task WhenGetAllBrewsAsyncIsCalled_ItShouldCallListAsync()
+        public async Task GetAllBrewsAsync_ByDefault_CallsListAsyncOnce()
         {
             var mockService = new Mock<IBrewService>();
             mockService.Setup(m => m.ListAsync());

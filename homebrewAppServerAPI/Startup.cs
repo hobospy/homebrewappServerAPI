@@ -1,4 +1,5 @@
 using AutoMapper;
+using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Persistence.Contexts;
@@ -37,7 +38,9 @@ namespace homebrewAppServerAPI
             //        );
             //});
             //services.AddControllers();
+
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
 
             services.AddDbContext<AppDbContext>(options =>
             {

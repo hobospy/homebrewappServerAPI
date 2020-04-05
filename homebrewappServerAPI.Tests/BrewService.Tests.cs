@@ -1,9 +1,11 @@
+using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Services;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace homebrewappServerAPI.Tests
@@ -17,8 +19,7 @@ namespace homebrewappServerAPI.Tests
 
         #region ListAsync
         [Test]
-        [Category("ListAsync")]
-        public async Task WhenListAsyncIsCalled_ItShouldCallListAsync()
+        public async Task ListAsync_ByDefault_CallsListAsyncOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -31,8 +32,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("ListAsync")]
-        public async Task WhenListAsyncIsCalled_ReturnsList()
+        public async Task ListAsync_ByDefault_ReturnsList()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -48,21 +48,21 @@ namespace homebrewappServerAPI.Tests
         #region GetAsync
         [Test]
         [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_CallsFindIdAsyncOnceForValidID()
+        public async Task GetAsync_CalledWithValidID_CallsFindIdAsyncOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.IsAny<int>()));
+            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            await brewService.GetAsync(1000);
+            await brewService.GetAsync(testBrew.ID);
 
-            mockRepository.Verify(m => m.FindByIdAsync(It.IsAny<int>()), Times.Once());
+            mockRepository.Verify(m => m.FindByIdAsync(testBrew.ID), Times.Once());
         }
 
         [Test]
         [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_ReturnsSuccessTrueIfIDValid()
+        public async Task GetAsync_CalledWithValidID_ReturnsSuccessTrue()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -76,7 +76,7 @@ namespace homebrewappServerAPI.Tests
 
         [Test]
         [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_ReturnsBrewIfIDValid()
+        public async Task GetAsync_CalledWithValidID_ReturnsBrew()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -91,79 +91,23 @@ namespace homebrewappServerAPI.Tests
 
         [Test]
         [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_CallsFindIdAsyncOnceForInvalidID()
+        public async Task GetAsync_CalledWithInvalidID_ThrowsBadRequestException()
         {
-            int BrewID = 1000;
-
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == BrewID)));
+            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID)));
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            await brewService.GetAsync(BrewID + 1);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.GetAsync(testBrew.ID + 1));
 
-            mockRepository.Verify(m => m.FindByIdAsync(It.IsAny<int>()), Times.Once());
-        }
-
-        [Test]
-        [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_ReturnsSuccessFalseIfIDInvalid()
-        {
-            int BrewID = 1000;
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == BrewID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.GetAsync(BrewID + 1);
-
-            Assert.IsFalse(response.Success);
-        }
-
-        [Test]
-        [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_ReturnsNullIfIDInvalid()
-        {
-            int BrewID = 1000;
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == BrewID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.GetAsync(BrewID + 1);
-
-            Assert.IsNull(response.Brew);
-        }
-
-        [Test]
-        [Category("GetAsync")]
-        public async Task WhenGetAsyncIsCalled_ReturnsErrorMsgIfIDInvalid()
-        {
-            int BrewID = 1000;
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == BrewID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.GetAsync(BrewID + 1);
-
-            StringAssert.AreEqualIgnoringCase("Brew not found.", response.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
         #endregion
 
         #region SaveAsync
         [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_CallsAddAsyncOnceWithValidData()
+        public async Task SaveAsync_CalledWithValidData_CallsAddAsyncOnce()
         {
-            var testBrew = new Brew { ID = 6000,
-                                      Name = "TestBrew",
-                                      BrewDate = new System.DateTime(),
-                                      ABV = 5.5 };
-
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
             mockRepository.Setup(m => m.AddAsync(It.IsAny<Brew>()));
@@ -175,8 +119,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_ReturnsSuccessIsTrueWithValidData()
+        public async Task SaveAsync_CalledWithValidData_ReturnsSuccessIsTrue()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -189,8 +132,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_ReturnsBrewWithValidData()
+        public async Task SaveAsync_CalledWithValidData_ReturnsBrew()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -203,53 +145,22 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_ReturnsSuccessFalseWithNullBrew()
+        public async Task SaveAsync_CalledWithNullBrew_ThrowsBadRequestException()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
             mockRepository.Setup(m => m.AddAsync(It.IsAny<Brew>()));
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            var response = await brewService.SaveAsync((Brew)null);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.SaveAsync((Brew)null));
 
-            Assert.IsFalse(response.Success);
-        }
-
-        [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_ReturnsErrorMsgWithNullBrew()
-        {
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.AddAsync(It.IsAny<Brew>()));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.SaveAsync((Brew)null);
-
-            StringAssert.AreEqualIgnoringCase("Cannot save invalid brew.", response.Message);
-        }
-
-        [Test]
-        [Category("SaveAsync")]
-        public async Task WhenSaveAsyncIsCalled_ReturnsErrorMsgWithNullBrew1()
-        {
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.AddAsync(It.IsAny<Brew>())).ThrowsAsync(new TimeoutException());
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.SaveAsync(testBrew);
-
-            Assert.IsFalse(string.IsNullOrEmpty(response.Message));
-            StringAssert.StartsWith("An error occurred when saving the brew: ", response.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
         #endregion
 
         #region UpdateAsync
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithValidData_CallsFindByIDOnce()
+        public async Task UpdateAsync_CalledWithValidData_CallsFindByIDOnce()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID,
                                              Name = "TestBrew - Updated",
@@ -258,7 +169,7 @@ namespace homebrewappServerAPI.Tests
 
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID)));
+            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
             mockRepository.Setup(m => m.Update(It.Is<Brew>(b => b.ID == testBrew.ID)));
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
@@ -268,8 +179,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithValidData_CallsUpdateOnce()
+        public async Task UpdateAsync_CalledWithValidData_CallsUpdateOnce()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID,
                                              Name = "TestBrew - Updated",
@@ -288,8 +198,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithValidID_ReturnsSuccessTrue()
+        public async Task UpdateAsync_CalledWithValidData_ReturnsSuccessTrue()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID,
                                              Name = "TestBrew - Updated",
@@ -308,8 +217,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithValidID_ReturnsUpdateBrew()
+        public async Task UpdateAsync_CalledWithValidData_ReturnsUpdateBrew()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID,
                                              Name = "TestBrew - Updated",
@@ -329,8 +237,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithInvalidData_CallsFindByIDOnce()
+        public async Task UpdateAsync_CalledWithInvalidData_ThrowsBadRequestException()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID + 1,
                                              Name = "TestBrew - Updated",
@@ -343,74 +250,13 @@ namespace homebrewappServerAPI.Tests
             mockRepository.Setup(m => m.Update(It.Is<Brew>(b => b.ID == testBrew.ID)));
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            var response = await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew));
 
-            mockRepository.Verify(m => m.FindByIdAsync(It.IsAny<int>()), Times.Once());
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithInvalidData_DoesNotCallUpdate()
-        {
-            var updatedTestBrew = new Brew { ID = testBrew.ID + 1,
-                                             Name = "TestBrew - Updated",
-                                             BrewDate = testBrew.BrewDate,
-                                             ABV = testBrew.ABV };
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Update(It.Is<Brew>(b => b.ID == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew);
-
-            mockRepository.Verify(m => m.Update(It.IsAny<Brew>()), Times.Never());
-        }
-
-        [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithInvalidID_ReturnsSuccessFalse()
-        {
-            var updatedTestBrew = new Brew { ID = testBrew.ID + 1,
-                                             Name = "TestBrew - Updated",
-                                             BrewDate = testBrew.BrewDate,
-                                             ABV = testBrew.ABV };
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew);
-
-            Assert.AreEqual(false, response.Success);
-        }
-
-        [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncIsCalledWithInvalidID_ReturnsBrewNotFound()
-        {
-            var updatedTestBrew = new Brew { ID = testBrew.ID + 1,
-                                             Name = "TestBrew - Updated",
-                                             BrewDate = testBrew.BrewDate,
-                                             ABV = testBrew.ABV };
-            //TODO: Brittle test, need to get error string resource file
-            var brewNotFound = "Brew not found.";
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew);
-
-            StringAssert.AreEqualIgnoringCase(brewNotFound, response.Message);
-        }
-
-        [Test]
-        [Category("UpdateAsync")]
-        public async Task WhenUpdateAsyncTimesOut_ReturnSuccessFalse()
+        public async Task UpdateAsync_UponTimeOut_ThrowsBadRequestException()
         {
             var updatedTestBrew = new Brew { ID = testBrew.ID,
                                              Name = "TestBrew - Updated",
@@ -423,17 +269,15 @@ namespace homebrewappServerAPI.Tests
             mockRepository.Setup(m => m.Update(It.Is<Brew>(b => b.ID == testBrew.ID))).Throws(new TimeoutException());
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            var response = await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.UpdateAsync(updatedTestBrew.ID, updatedTestBrew));
 
-            Assert.IsFalse(string.IsNullOrEmpty(response.Message));
-            StringAssert.StartsWith("An error occured when updating the brew: ", response.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
         #endregion
 
         #region DeleteAsync
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_CallsFindByIDOnce()
+        public async Task DeleteAsync_CalledWithValidID_CallsFindByIDOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -447,8 +291,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_CallsRemoveOnce()
+        public async Task DeleteAsync_CalledWithValidID_CallsRemoveOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -462,8 +305,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_ReturnsSuccessTrue()
+        public async Task DeleteAsync_CalledWithValidID_ReturnsSuccessTrue()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -477,8 +319,7 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_ReturnsDeletedBrew()
+        public async Task DeleteAsync_CalledWithValidID_ReturnsDeletedBrew()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
@@ -492,80 +333,31 @@ namespace homebrewappServerAPI.Tests
         }
 
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithInvalidID_CallsFindByIDOnce()
+        public async Task DeleteAsync_CalledWithInvalidID_ThrowsBadRequestException()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
             mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
+            //mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            var response = await brewService.DeleteAsync(testBrew.ID + 1);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.DeleteAsync(testBrew.ID + 1));
 
-            mockRepository.Verify(m => m.FindByIdAsync(It.IsAny<int>()), Times.Once());
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
 
         [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithInvalidID_DoesNotCallRemove()
+        public async Task DeleteAsync_RaisesKnownException_ThrowsBadRequestException()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
             var mockRepository = new Mock<IBrewRepository>();
             mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
+            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID))).Throws(new UnauthorizedAccessException());
             var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
 
-            var response = await brewService.DeleteAsync(testBrew.ID + 1);
+            var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await brewService.DeleteAsync(testBrew.ID));
 
-            mockRepository.Verify(m => m.Remove(It.IsAny<Brew>()), Times.Never());
-        }
-
-        [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_ReturnsSuccessFalse()
-        {
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.DeleteAsync(testBrew.ID + 1);
-
-            Assert.IsFalse(response.Success);
-        }
-
-        [Test]
-        [Category("DeleteAsync")]
-        public async Task WhenDeleteAsyncIsCalledWithValidID_ReturnsBrewNotFound()
-        {
-            //TODO: Brittle test, need to get error string resource file
-            var brewNotFound = "Brew not found.";
-
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.DeleteAsync(testBrew.ID + 1);
-
-            StringAssert.AreEqualIgnoringCase(brewNotFound, response.Message);
-        }
-
-        public async Task WhenDeleteAsyncTimesOut_ReturnSuccessFalse()
-        {
-            var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IBrewRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testBrew.ID))).ReturnsAsync(testBrew);
-            mockRepository.Setup(m => m.Remove(It.Is<Brew>(b => b.ID == testBrew.ID)));
-            var brewService = new BrewService(mockRepository.Object, mockUnitOfWork.Object);
-
-            var response = await brewService.DeleteAsync(testBrew.ID + 1);
-
-            Assert.IsFalse(response.Success);
-            StringAssert.AreEqualIgnoringCase("An error occured when deleting the brew: ", response.Message);
+            Assert.AreEqual(HttpStatusCode.BadRequest, ex.StatusCode);
         }
         #endregion
     }

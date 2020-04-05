@@ -15,7 +15,8 @@
       "launchUrl": "brew/summary",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "nativeDebugging": true
     },
     "homebrewAppServerAPI": {
       "commandName": "Project",

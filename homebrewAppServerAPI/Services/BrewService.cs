@@ -1,10 +1,12 @@
-﻿using homebrewAppServerAPI.Domain.Models;
+﻿using homebrewAppServerAPI.Domain.ExceptionHandling;
+using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Services
@@ -31,7 +33,7 @@ namespace homebrewAppServerAPI.Services
 
             if (brewDetail == null)
             {
-                return new BrewResponse("Brew not found.");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a brew with the ID: {id}");
             }
 
             return new BrewResponse(brewDetail);
@@ -52,15 +54,16 @@ namespace homebrewAppServerAPI.Services
                 }
                 else
                 {
-                    returnValue = new BrewResponse("Cannot save invalid brew.");
+                    throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Cannot save a null brew");
                 }
 
                 return returnValue;
             }
             catch (Exception ex)
             {
-                // Do some logging stuff
-                return new BrewResponse($"An error occurred when saving the brew: {ex.Message}");
+                var msg = "An error occurred when saving the brew";
+                msg += brew != null ? $" ({brew.Name}: {ex.Message}" : $": {ex.Message}";
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", msg);
             }
         }
 
@@ -70,7 +73,7 @@ namespace homebrewAppServerAPI.Services
 
             if (existingBrew == null)
             {
-                return new BrewResponse("Brew not found.");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to update berw, can't find a brew with ID: {id}");
             }
 
             existingBrew.Name = brew.Name;
@@ -84,8 +87,7 @@ namespace homebrewAppServerAPI.Services
             }
             catch (Exception ex)
             {
-                // Do some logging stuff
-                return new BrewResponse($"An error occured when updating the brew: {ex.Message}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when updating the brew ({brew.Name}): {ex.Message}");
             }
         }
 
@@ -95,7 +97,7 @@ namespace homebrewAppServerAPI.Services
 
             if (existingBrew == null)
             {
-                return new BrewResponse("Brew not found.");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to delete brew, can't find a brew with ID: {id}");
             }
 
             try
@@ -107,8 +109,7 @@ namespace homebrewAppServerAPI.Services
             }
             catch (Exception ex)
             {
-                // Do some logging
-                return new BrewResponse($"An error occured when deleting the brew: {ex.Message}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when deleting the brew: {ex.Message}");
             }
         }
     }

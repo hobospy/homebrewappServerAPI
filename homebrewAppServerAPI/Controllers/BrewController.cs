@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
@@ -6,6 +7,7 @@ using homebrewAppServerAPI.Extensions;
 using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http.Cors;
 
@@ -43,10 +45,10 @@ namespace homebrewAppServerAPI.Controllers
         {
             var brewResponse = await _brewService.GetAsync(id);
 
-            //if (!brewResponse.Success)
-            //{
-            //    return BadRequest(brewResponse.Message);
-            //}
+            if (!brewResponse.Success)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a brew with the ID: {id}");
+            }
 
             var resource = _mapper.Map<Brew, BrewResource>(brewResponse.Brew);
             return resource;
@@ -58,7 +60,7 @@ namespace homebrewAppServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState.GetErrorMessages());
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
             }
 
             var brew = _mapper.Map<SaveBrewResource, Brew>(resource);
@@ -66,7 +68,7 @@ namespace homebrewAppServerAPI.Controllers
 
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to save changes: ${result.Message}");
             }
 
             var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
@@ -79,7 +81,7 @@ namespace homebrewAppServerAPI.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState.GetErrorMessages());
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
             }
 
             var brew = _mapper.Map<SaveBrewResource, Brew>(resource);
@@ -87,7 +89,7 @@ namespace homebrewAppServerAPI.Controllers
 
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to save changes: ${result.Message}");
             }
 
             var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
@@ -102,7 +104,7 @@ namespace homebrewAppServerAPI.Controllers
 
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to delete brew with ID: {id} due to : ${result.Message}");
             }
 
             var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
