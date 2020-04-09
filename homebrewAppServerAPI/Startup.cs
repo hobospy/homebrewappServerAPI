@@ -42,10 +42,17 @@ namespace homebrewAppServerAPI
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
 
+#if USE_SQLITE
+            services.AddDbContext<SqliteDbContext>(options =>
+            {
+                options.UseSqlite("Data Source=./homebrew.db");
+            });
+#else
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseInMemoryDatabase("homebrewapp-api-in-memory");
             });
+#endif
 
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IBrewRepository, BrewRepository>();

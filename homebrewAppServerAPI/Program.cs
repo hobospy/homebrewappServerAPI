@@ -13,10 +13,17 @@ namespace homebrewAppServerAPI
             var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
+#if USE_SQLITE
+            using (var context = scope.ServiceProvider.GetService<SqliteDbContext>())
+            {
+                context.Database.EnsureCreated();
+            }
+#else
             using (var context = scope.ServiceProvider.GetService<AppDbContext>())
             {
                 context.Database.EnsureCreated();
             }
+#endif
 
             host.Run();
         }

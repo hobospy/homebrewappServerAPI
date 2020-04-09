@@ -9,7 +9,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 {
     public class WaterProfileRepository : BaseRepository, IWaterProfileRepository
     {
+#if USE_SQLITE
+        public WaterProfileRepository(SqliteDbContext context) : base(context) { }
+#else
         public WaterProfileRepository(AppDbContext context) : base(context) { }
+#endif
 
         public async Task<IEnumerable<WaterProfile>> ListAsync()
         {

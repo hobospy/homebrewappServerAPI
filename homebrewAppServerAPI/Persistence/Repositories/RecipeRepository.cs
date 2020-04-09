@@ -9,7 +9,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 {
     public class RecipeRepository : BaseRepository, IRecipeRepository
     {
+#if USE_SQLITE
+        public RecipeRepository(SqliteDbContext context) : base(context) { }
+#else
         public RecipeRepository(AppDbContext context) : base(context) { }
+#endif
 
         public async Task<IEnumerable<Recipe>> ListAsync()
         {

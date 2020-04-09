@@ -1,19 +1,36 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
     public class Recipe
     {
+        [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+
+        [Required]
+        [StringLength(50)]
         public string Name { get; set; }
+
+        [Required]
+        [StringLength(500)]
         public string Description { get; set; }
-        [NotMapped]
+
+        [JsonIgnore]
         public List<RecipeStep> Steps { get; set; }
+
+        [Required]
         public double Rating { get; set; } = 0.0;
+
+        [Required]
         public ETypeOfBeer Type { get; set; }
 
-        public int WaterID { get; set; }
+        [ForeignKey("WaterProfileID")]
+        public int WaterProfileID { get; set; }
         public WaterProfile WaterProfile { get; set; }
 
         public IList<Ingredient> Ingredients { get; set; }

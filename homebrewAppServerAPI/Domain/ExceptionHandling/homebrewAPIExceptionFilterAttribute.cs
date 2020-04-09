@@ -39,12 +39,12 @@ namespace homebrewAppServerAPI.Domain.ExceptionHandling
             }
             else
             {
-#if !DEBUG
-                var message = "Unknown error occurred";
-                string stack = null;
-#else
+#if USE_SQLITE
                 var message = context.Exception.GetBaseException().Message;
                 string stack = context.Exception.StackTrace;
+#else
+                var message = "Unknown error occurred";
+                string stack = null;
 #endif
                 hbError = new homebrewAPIError(message);
                 hbError.detail = stack;

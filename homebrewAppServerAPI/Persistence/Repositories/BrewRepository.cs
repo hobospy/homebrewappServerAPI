@@ -9,7 +9,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 {
     public class BrewRepository : BaseRepository, IBrewRepository
     {
+#if USE_SQLITE
+        public BrewRepository(SqliteDbContext context) : base(context) { }
+#else
         public BrewRepository(AppDbContext context) : base(context) { }
+#endif
 
         public async Task<IEnumerable<Brew>> ListAsync()
         {

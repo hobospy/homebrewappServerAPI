@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
     public class Brew
     {
+        [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]
@@ -20,12 +21,13 @@ namespace homebrewAppServerAPI.Domain.Models
         [StringLength(1000)]
         public string TastingNotes { get; set; }
 
-
+        [Required]
         public double ABV { get; set; }
 
 
         public bool BrewFavourite { get; set; } = false;
 
+        [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
         public Recipe Recipe { get; set; }
     }

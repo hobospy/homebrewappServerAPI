@@ -1,30 +1,29 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace homebrewAppServerAPI.Persistence.Contexts
 {
-    public class AppDbContext : DbContext
+    public class SqliteDbContext : DbContext
     {
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) :base(options) { }
+        public SqliteDbContext(DbContextOptions<SqliteDbContext> options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        {
+            options.UseSqlite("Data Source=homebrew.db");
+
+            base.OnConfiguring(options);
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+#if SEED_SQLITE_DATA
             if (builder != null)
             {
-                base.OnModelCreating(builder);
-
-                builder.Entity<WaterProfile>().ToTable("WaterProfiles");
-                builder.Entity<WaterProfile>().HasKey(p => p.ID);
-                builder.Entity<WaterProfile>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
-                builder.Entity<WaterProfile>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.Entity<WaterProfile>().HasMany(p => p.Recipes).WithOne(p => p.WaterProfile).HasForeignKey(p => p.WaterProfileID);
-
                 builder.Entity<WaterProfile>().HasData
                     (
                         new WaterProfile
@@ -43,15 +42,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Stout focused"
                         }
                     );
-
-                builder.Entity<Recipe>().ToTable("Recipes");
-                builder.Entity<Recipe>().HasKey(p => p.ID);
-                builder.Entity<Recipe>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
-                builder.Entity<Recipe>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.Entity<Recipe>().Property(p => p.Type).IsRequired();
-                builder.Entity<Recipe>().Property(p => p.Description).IsRequired().HasMaxLength(500);
-                builder.Entity<Recipe>().HasMany(p => p.Brews).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
-                builder.Entity<Recipe>().HasMany(p => p.Ingredients).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
 
                 builder.Entity<Recipe>().HasData
                     (
@@ -102,13 +92,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         }
                     );
 
-                builder.Entity<Brew>().ToTable("Brews");
-                builder.Entity<Brew>().HasKey(p => p.ID);
-                builder.Entity<Brew>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
-                builder.Entity<Brew>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.Entity<Brew>().Property(p => p.BrewDate).IsRequired();
-                builder.Entity<Brew>().Property(p => p.ABV).IsRequired();
-
                 builder.Entity<Brew>().HasData
                     (
                         new Brew
@@ -141,21 +124,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             RecipeID = 2001
                         }
                     );
-
-                builder.Entity<Ingredient>().ToTable("Ingredients");
-                builder.Entity<Ingredient>().HasKey(p => p.ID);
-                builder.Entity<Ingredient>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
-                builder.Entity<Ingredient>().Property(p => p.Type).IsRequired();
-                builder.Entity<Ingredient>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.Entity<Ingredient>().Property(p => p.Amount).IsRequired();
-
-                builder.Entity<Ingredient>().HasData
-                    (
-                        new Ingredient { ID = 5000, Type = ETypeOfIngredient.Grains, Name = "Pale ale malt", Amount = 5.1, RecipeID = 2000 },
-                        new Ingredient { ID = 5001, Type = ETypeOfIngredient.Grains, Name = "Chocolate malt", Amount = 0.1, RecipeID = 2000 },
-                        new Ingredient { ID = 5002, Type = ETypeOfIngredient.Hops, Name = "Amarillo", Amount = 0.04, RecipeID = 2000 }
-                    );
             }
+#endif
         }
     }
 }
