@@ -3,6 +3,7 @@ using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace homebrewAppServerAPI.Services
 
             if (existingBrew == null)
             {
-                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to update berw, can't find a brew with ID: {id}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to update brew, can't find a brew with ID: {id}");
             }
 
             existingBrew.Name = brew.Name;
@@ -87,7 +88,36 @@ namespace homebrewAppServerAPI.Services
             }
             catch (Exception ex)
             {
-                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when updating the brew ({brew.Name}): {ex.Message}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when updating the brew ({existingBrew.Name}): {ex.Message}");
+            }
+        }
+
+        public async Task<BrewResponse> PatchAsync(int id, JsonPatchDocument<Brew> patch)
+        {
+            if (patch == null)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch brew, patch information is null");
+            }
+
+            var existingBrew = await _brewRepository.FindByIdAsync(id);
+
+            if (existingBrew == null)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch brew, can't find a brew with ID: {id}");
+            }
+
+            patch.ApplyTo(existingBrew);
+
+            try
+            {
+                _brewRepository.Update(existingBrew);
+                await _unitOfWork.CompleteAsync();
+
+                return new BrewResponse(existingBrew);
+            }
+            catch (Exception ex)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when patching the brew ({existingBrew.Name}): {ex.Message}");
             }
         }
 

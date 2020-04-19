@@ -8,10 +8,15 @@ using homebrewAppServerAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace homebrewAppServerAPI
 {
@@ -35,9 +40,22 @@ namespace homebrewAppServerAPI
             //            .SetIsOriginAllowedToAllowWildcardSubdomains()
             //            .WithOrigins("http://192.168.1.*:3000")
             //            .AllowAnyMethod()
+            //            .AllowAnyHeader()
             //        );
             //});
-            //services.AddControllers();
+
+            //services.AddControllers(setupAction =>
+            //setupAction.ReturnHttpNotAcceptable = true).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(setupAction =>
+            //setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+            services.AddControllersWithViews().AddNewtonsoftJson();
+
+            services.AddControllersWithViews(options =>
+            {
+                options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+            });
+
+            //services.AddControllers().AddNewtonsoftJson();
+
 
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
@@ -63,9 +81,28 @@ namespace homebrewAppServerAPI
             services.AddAutoMapper(typeof(Startup));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
         {
+            var builder = new ServiceCollection()
+                .AddLogging()
+                .AddMvc()
+                .AddNewtonsoftJson()
+                .Services.BuildServiceProvider();
+
+            return builder
+                .GetRequiredService<IOptions<MvcOptions>>()
+                .Value
+                .InputFormatters
+                .OfType<NewtonsoftJsonPatchInputFormatter>()
+                .First();
+
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddLog4Net();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,11 +114,9 @@ namespace homebrewAppServerAPI
             }
 
             app.UseHttpsRedirection();
-            //app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod());
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
-            //app.UseCors(options => options.WithOrigins("http://192.168.1.*:3000").SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyMethod());
-            //app.UseCors(builder =>
-            //            builder.SetIsOriginAllowedToAllowWildcardSubdomains()
+            app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
+            //app.UseCors("AllowCors");
+            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
             app.UseMvc();
         }
     }

@@ -14,7 +14,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite("Data Source=homebrew.db");
+            options.UseSqlite(@"Data Source=C:\temp\homebrew.db");
 
             base.OnConfiguring(options);
         }
@@ -109,7 +109,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ID = 3001,
                             Name = "Brothers Kolsch Ripoff II",
                             BrewDate = new System.DateTime(2019, 12, 24),
-                            ABV = 5.2,
+                            ABV = 4.9,
                             TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.",
                             RecipeID = 2000,
                             BrewFavourite = false

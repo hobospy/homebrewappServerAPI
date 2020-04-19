@@ -126,7 +126,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ID = 3001,
                             Name = "Brothers Kolsch Ripoff II",
                             BrewDate = new System.DateTime(2019, 12, 24),
-                            ABV = 5.2,
+                            ABV = 5.08,
                             TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.",
                             RecipeID = 2000,
                             BrewFavourite = false

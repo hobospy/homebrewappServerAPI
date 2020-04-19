@@ -2,9 +2,10 @@
 using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
-using homebrewAppServerAPI.Domain.Services.Communication;
 using homebrewAppServerAPI.Extensions;
+using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Resources;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -18,13 +19,16 @@ namespace homebrewAppServerAPI.Controllers
     [EnableCors(origins: "http://localhost:3000/", headers: "*", methods: "*")]
     public class BrewController : ControllerBase
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IBrewService _brewService;
         private readonly IMapper _mapper;
 
         public BrewController(IBrewService brewService, IMapper mapper)
         {
-            _brewService = brewService;
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
 
+            _brewService = brewService;
             _mapper = mapper;
         }
 
@@ -33,9 +37,10 @@ namespace homebrewAppServerAPI.Controllers
         [Route("Summary")]
         public async Task<IEnumerable<BrewResource>> GetAllBrewsAsync()
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
+
             var brews = await _brewService.ListAsync();
             var resources = _mapper.Map<IEnumerable<Brew>, IEnumerable<BrewResource>>(brews);
-
             return resources;
         }
 
@@ -43,6 +48,8 @@ namespace homebrewAppServerAPI.Controllers
         [HttpGet("{id}")]
         public async Task<BrewResource> GetBrewAsync(int id)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
             var brewResponse = await _brewService.GetAsync(id);
 
             if (!brewResponse.Success)
@@ -58,6 +65,8 @@ namespace homebrewAppServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostBrewAsync([FromBody] SaveBrewResource resource)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
+
             if (!ModelState.IsValid)
             {
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
@@ -79,6 +88,8 @@ namespace homebrewAppServerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBrewAsync(int id, [FromBody] SaveBrewResource resource)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
             if (!ModelState.IsValid)
             {
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
@@ -96,10 +107,35 @@ namespace homebrewAppServerAPI.Controllers
             return Ok(brewResource);
         }
 
+        // PATCH Brew
+        [HttpPatch("{id}")]
+        //[Consumes(MediaTypes.Application.JsonPatch)]
+        public async Task<IActionResult> PatchBrewAsync(int id, [FromBody] JsonPatchDocument<Brew> patch)
+        {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
+            if (!ModelState.IsValid)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
+            }
+
+            var result = await _brewService.PatchAsync(id, patch);
+
+            if (!result.Success)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch changes: ${result.Message}");
+            }
+
+            var brewResource = _mapper.Map<Brew, BrewResource>(result.Brew);
+            return Ok(brewResource);
+        }
+
         // DELETE Brew
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBrewAsync(int id)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
             var result = await _brewService.DeleteAsync(id);
 
             if (!result.Success)
