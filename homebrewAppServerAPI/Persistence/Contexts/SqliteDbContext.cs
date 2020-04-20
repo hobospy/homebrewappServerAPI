@@ -122,6 +122,16 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ABV = 4.7,
                             TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)",
                             RecipeID = 2001
+                        },
+                        new Brew
+                        {
+                            ID = 3003,
+                            Name = "Brothers Kolsch Ripoff III",
+                            BrewDate = new System.DateTime(2020, 02, 21),
+                            ABV = 4.7,
+                            TastingNotes = "Nice clean flavour with a reasonably strong aroma and good clarity",
+                            RecipeID = 2000,
+                            BrewFavourite = true
                         }
                     );
             }
