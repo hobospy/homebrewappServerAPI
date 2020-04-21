@@ -2,6 +2,7 @@
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Extensions;
+using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace homebrewAppServerAPI.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IRecipeService _recipeService;
         private readonly IMapper _mapper;
 
@@ -28,6 +31,8 @@ namespace homebrewAppServerAPI.Controllers
         [Route("Summary")]
         public async Task<IEnumerable<RecipeResource>> GetAllRecipesAsync()
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
+
             var recipes = await _recipeService.ListAsync();
             var resources = _mapper.Map<IEnumerable<Recipe>, IEnumerable<RecipeResource>>(recipes);
 
