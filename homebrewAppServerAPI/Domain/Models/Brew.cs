@@ -24,8 +24,7 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public double ABV { get; set; }
 
-
-        public bool BrewFavourite { get; set; } = false;
+        public double Rating { get; set; } = 0.0;
 
         [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }

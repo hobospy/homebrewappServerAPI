@@ -8,3 +8,5 @@ homebrewappServerAPI.Tests/bin/
 homebrewappServerAPI.Tests/obj/
 
 homebrewAppServerAPI/site/
+
+.vs/

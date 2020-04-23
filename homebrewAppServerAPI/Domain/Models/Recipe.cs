@@ -16,15 +16,14 @@ namespace homebrewAppServerAPI.Domain.Models
         [StringLength(50)]
         public string Name { get; set; }
 
+        public bool Favourite { get; set; } = false;
+
         [Required]
         [StringLength(500)]
         public string Description { get; set; }
 
         [JsonIgnore]
         public List<RecipeStep> Steps { get; set; }
-
-        [Required]
-        public double Rating { get; set; } = 0.0;
 
         [Required]
         public ETypeOfBeer Type { get; set; }

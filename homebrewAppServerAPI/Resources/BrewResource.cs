@@ -9,7 +9,7 @@ namespace homebrewAppServerAPI.Resources
         public DateTime BrewDate { get; set; }
         public double ABV { get; set; }
         public string TastingNotes { get; set; }
-        public bool BrewFavourite { get; set; }
+        public double Rating { get; set; }
 
         public RecipeResource Recipe { get; set; }
     }

@@ -22,6 +22,8 @@ namespace homebrewAppServerAPI
 {
     public class Startup
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -33,29 +35,13 @@ namespace homebrewAppServerAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("CorsPolicy",
-            //        builder => builder
-            //            .SetIsOriginAllowedToAllowWildcardSubdomains()
-            //            .WithOrigins("http://192.168.1.*:3000")
-            //            .AllowAnyMethod()
-            //            .AllowAnyHeader()
-            //        );
-            //});
 
-            //services.AddControllers(setupAction =>
-            //setupAction.ReturnHttpNotAcceptable = true).AddXmlDataContractSerializerFormatters().AddNewtonsoftJson(setupAction =>
-            //setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
             services.AddControllersWithViews().AddNewtonsoftJson();
 
             services.AddControllersWithViews(options =>
             {
                 options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
             });
-
-            //services.AddControllers().AddNewtonsoftJson();
-
 
             services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
@@ -71,9 +57,10 @@ namespace homebrewAppServerAPI
                 options.UseInMemoryDatabase("homebrewapp-api-in-memory");
             });
 #endif
-
+            services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IBrewRepository, BrewRepository>();
+            services.AddScoped<IWaterProfileService, WaterProfileService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IBrewService, BrewService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -114,9 +101,12 @@ namespace homebrewAppServerAPI
             }
 
             app.UseHttpsRedirection();
+#if DEBUG
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
-            //app.UseCors("AllowCors");
-            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
+#else
+            app.UseCors("AllowCors");
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
+#endif
             app.UseMvc();
         }
     }

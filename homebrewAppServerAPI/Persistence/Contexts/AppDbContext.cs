@@ -61,7 +61,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Brothers Kolsch Ripoff",
                             Type = ETypeOfBeer.KolschAlt,
                             Description = "Kolsch is a unique style in that it is fermented with ale yeast, but then finished with lagering. The result is the best of both worlds: A light easy drinking pale that finishes crisp and clean. The most basic way to separate beers into different styles is by yeast. By far, the two largest groups are ales and lagers.",
-                            Rating = 4.2,
+                            Favourite = true,
                             WaterProfileID = 1001
                         },
                         new Recipe
@@ -70,7 +70,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Amarillo SMaSH",
                             Type = ETypeOfBeer.AmericanAle,
                             Description = "Characterized by floral, fruity, citrus-like, piney, resinous American hops, the American pale ale is a medium-bodied beer with low to medium caramel, and carries with it a toasted maltiness.",
-                            Rating = 4.9,
+                            Favourite = true,
                             WaterProfileID = 1000
                         },
                         new Recipe
@@ -79,7 +79,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Raspberry Brown Porter",
                             Type = ETypeOfBeer.Porter,
                             Description = "A moderate-strength brown beer with a restrained roasty character and bitterness. May have a range of roasted flavors, generally without burnt qualities, and often has a chocolate-caramel-malty profile.",
-                            Rating = 0.8,
                             WaterProfileID = 1002
                         },
                         new Recipe
@@ -88,7 +87,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Pepper Saison",
                             Type = ETypeOfBeer.BelStrongAle,
                             Description = "Saison (French, \"season,\" French pronunciation: ​[sɛ. zɔ̃]) is a pale ale that is highly carbonated, fruity, spicy, and often bottle conditioned. It was historically brewed with low alcohol levels, but modern productions of the style have moderate to high levels of alcohol.",
-                            Rating = 3.1,
                             WaterProfileID = 1001
                         },
                         new Recipe
@@ -97,7 +95,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "White Peach Sour",
                             Type = ETypeOfBeer.Sour,
                             Description = "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale.",
-                            Rating = 5.0,
+                            Favourite = true,
                             WaterProfileID = 1001
                         }
                     );
@@ -119,7 +117,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ABV = 5.5,
                             TastingNotes = "Not a million miles away from the real thing!",
                             RecipeID = 2000,
-                            BrewFavourite = true
+                            Rating = 2.3
                         },
                         new Brew
                         {
@@ -129,7 +127,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ABV = 5.08,
                             TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.",
                             RecipeID = 2000,
-                            BrewFavourite = false
+                            Rating = 4.7
                         },
                         new Brew
                         {
@@ -148,7 +146,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             ABV = 4.7,
                             TastingNotes = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week",
                             RecipeID = 2000,
-                            BrewFavourite = true
+                            Rating = 5.0
                         }
                     );
 

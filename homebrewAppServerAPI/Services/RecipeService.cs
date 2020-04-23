@@ -1,9 +1,11 @@
-﻿using homebrewAppServerAPI.Domain.Models;
+﻿using homebrewAppServerAPI.Domain.ExceptionHandling;
+using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Services
@@ -22,6 +24,18 @@ namespace homebrewAppServerAPI.Services
         public async Task<IEnumerable<Recipe>> ListAsync()
         {
             return await _recipeRepository.ListAsync();
+        }
+
+        public async Task<RecipeResponse> GetAsync(int id)
+        {
+            var recipeDetail = await _recipeRepository.FindByIdAsync(id);
+
+            if (recipeDetail == null)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a brew with the ID: {id}");
+            }
+
+            return new RecipeResponse(recipeDetail);
         }
 
         public async Task<RecipeResponse> SaveAsync(Recipe recipe)

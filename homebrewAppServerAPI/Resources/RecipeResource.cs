@@ -9,7 +9,7 @@ namespace homebrewAppServerAPI.Resources
         public string Name { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
-        public double Rating { get; set; }
+        public bool Favourite { get; set; }
         public WaterProfileResource WaterProfile { get; set; }
 
         public List<Ingredient> Ingredients { get; set; }

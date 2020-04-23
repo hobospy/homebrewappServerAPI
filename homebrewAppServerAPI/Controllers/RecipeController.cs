@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Extensions;
@@ -6,6 +7,7 @@ using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Controllers
@@ -37,6 +39,23 @@ namespace homebrewAppServerAPI.Controllers
             var resources = _mapper.Map<IEnumerable<Recipe>, IEnumerable<RecipeResource>>(recipes);
 
             return resources;
+        }
+
+        // Get Recipe
+        [HttpGet("{id}")]
+        public async Task<RecipeResource> GetRecipeAsync(int id)
+        {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
+            var recipeResponse = await _recipeService.GetAsync(id);
+
+            if (!recipeResponse.Success)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a recipe with the ID: {id}");
+            }
+
+            var resource = _mapper.Map<Recipe, RecipeResource>(recipeResponse.Recipe);
+            return resource;
         }
 
         // POST Recipe

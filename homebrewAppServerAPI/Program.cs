@@ -25,11 +25,11 @@ namespace homebrewAppServerAPI
                     context.Database.EnsureCreated();
                 }
 #else
-            using (var context = scope.ServiceProvider.GetService<AppDbContext>())
-            {
-                log.Debug("Using the EF in memory database context");
-                context.Database.EnsureCreated();
-            }
+                using (var context = scope.ServiceProvider.GetService<AppDbContext>())
+                {
+                    log.Debug("Using the EF in memory database context");
+                    context.Database.EnsureCreated();
+                }
 #endif
             }
 
