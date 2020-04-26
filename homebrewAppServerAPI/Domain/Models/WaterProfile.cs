@@ -18,6 +18,8 @@ namespace homebrewAppServerAPI.Domain.Models
         [StringLength(50)]
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
         [Required]
         public double LacticAcid { get; set; } = 0.0;
 
