@@ -132,6 +132,17 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Rating = 5.0
                         }
                     );
+
+                builder.Entity<Ingredient>().HasData
+                    (
+                        new Ingredient {
+                            ID = 7001,
+                            Name = "Pale ale",
+                            Type = ETypeOfIngredient.Grains,
+                            Amount = 5.5,
+                            RecipeID = 2001
+                        }
+                    );
             }
 #endif
         }

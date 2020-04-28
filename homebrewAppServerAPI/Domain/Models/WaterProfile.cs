@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Domain.Models
@@ -41,6 +43,8 @@ namespace homebrewAppServerAPI.Domain.Models
         [NotMapped]
         public Dictionary<string, double> AdditionalAduncts { get; set; }
 
+        [JsonIgnore]
+        [IgnoreDataMember]
         public IList<Recipe> Recipes { get; set; }
     }
 }

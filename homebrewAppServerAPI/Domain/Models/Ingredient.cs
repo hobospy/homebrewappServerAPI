@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
@@ -25,9 +20,10 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public double Amount { get; set; }
 
-        [Required]
+        [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
+        //[IgnoreDataMember]
         public Recipe Recipe { get; set; }
         //public Dictionary<string, double> Grains { get; set; }
         //public Dictionary<string, double> Hops { get; set; }
