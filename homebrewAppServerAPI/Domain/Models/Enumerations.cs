@@ -67,4 +67,16 @@ namespace homebrewAppServerAPI.Domain.Models
         [Description("Adjuncts")]
         Adjuncts
     }
+
+    public enum EUnitOfMeasure
+    {
+        [Description("Kilo")]
+        kilo = 0,
+        [Description("Gram")]
+        gram,
+        [Description("Litre")]
+        litre = 100,
+        [Description("Millilitre")]
+        mil
+    }
 }

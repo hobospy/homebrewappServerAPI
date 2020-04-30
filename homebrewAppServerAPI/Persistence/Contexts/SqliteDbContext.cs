@@ -140,6 +140,34 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Pale ale",
                             Type = ETypeOfIngredient.Grains,
                             Amount = 5.5,
+                            Unit = EUnitOfMeasure.kilo,
+                            RecipeID = 2001
+                        },
+                        new Ingredient
+                        {
+                            ID = 7002,
+                            Name = "Wheat malt",
+                            Type = ETypeOfIngredient.Grains,
+                            Amount = 0.3,
+                            Unit = EUnitOfMeasure.kilo,
+                            RecipeID = 2001
+                        },
+                        new Ingredient
+                        {
+                            ID = 7003,
+                            Name = "Light crystal malt",
+                            Type = ETypeOfIngredient.Grains,
+                            Amount = 0.2,
+                            Unit = EUnitOfMeasure.kilo,
+                            RecipeID = 2001
+                        },
+                        new Ingredient
+                        {
+                            ID = 7004,
+                            Name = "Amarillo",
+                            Type = ETypeOfIngredient.Hops,
+                            Amount = 65,
+                            Unit = EUnitOfMeasure.gram,
                             RecipeID = 2001
                         }
                     );

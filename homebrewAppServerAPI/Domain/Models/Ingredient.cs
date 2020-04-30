@@ -13,14 +13,17 @@ namespace homebrewAppServerAPI.Domain.Models
         public int ID { get; set; }
 
         [Required]
-        public ETypeOfIngredient Type { get; set; }
-
-        [Required]
         [StringLength(50)]
         public string Name { get; set; }
 
         [Required]
+        public ETypeOfIngredient Type { get; set; }
+
+        [Required]
         public double Amount { get; set; }
+
+        [Required]
+        public EUnitOfMeasure Unit { get; set; }
 
         [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
