@@ -70,13 +70,13 @@ namespace homebrewAppServerAPI.Domain.Models
 
     public enum EUnitOfMeasure
     {
-        [Description("Kilo")]
+        [Description("kg")]
         kilo = 0,
-        [Description("Gram")]
+        [Description("g")]
         gram,
-        [Description("Litre")]
+        [Description("l")]
         litre = 100,
-        [Description("Millilitre")]
+        [Description("ml")]
         mil
     }
 }

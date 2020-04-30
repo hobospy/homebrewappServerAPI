@@ -12,6 +12,6 @@ namespace homebrewAppServerAPI.Resources
         public bool Favourite { get; set; }
         public WaterProfileResource WaterProfile { get; set; }
 
-        public List<Ingredient> Ingredients { get; set; }
+        public List<IngredientResource> Ingredients { get; set; }
     }
 }

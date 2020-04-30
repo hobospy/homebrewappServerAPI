@@ -57,9 +57,11 @@ namespace homebrewAppServerAPI
                 options.UseInMemoryDatabase("homebrewapp-api-in-memory");
             });
 #endif
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
             services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IBrewRepository, BrewRepository>();
+            services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IWaterProfileService, WaterProfileService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IBrewService, BrewService>();

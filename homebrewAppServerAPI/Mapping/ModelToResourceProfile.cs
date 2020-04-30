@@ -18,14 +18,11 @@ namespace homebrewAppServerAPI.Mapping
 
             CreateMap<WaterProfile, WaterProfileResource>();
 
-            //CreateMap<IList<Ingredient>, IList<IngredientResource>>()
-            //    .ForMember
-
             CreateMap<Recipe, RecipeResource>()
                 .ForMember(src => src.Type,
                            opt => opt.MapFrom(src => src.Type.ToDescriptionString()))
                 .ForMember(src => src.Ingredients,
-                           opt => opt.MapFrom(src => src.Ingredients)); 
+                           opt => opt.MapFrom(src => src.Ingredients));
 
             CreateMap<Brew, BrewResource>();
         }
