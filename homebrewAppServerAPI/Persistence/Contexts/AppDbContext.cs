@@ -23,7 +23,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                 builder.Entity<WaterProfile>().HasKey(p => p.ID);
                 builder.Entity<WaterProfile>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
                 builder.Entity<WaterProfile>().Property(p => p.Name).IsRequired().HasMaxLength(50);
-                builder.Entity<WaterProfile>().HasMany(p => p.Recipes).WithOne(p => p.WaterProfile).HasForeignKey(p => p.WaterProfileID);
+                //builder.Entity<WaterProfile>().HasMany(p => p.Recipes).WithOne(p => p.WaterProfile).HasForeignKey(p => p.WaterProfileID);
 
                 builder.Entity<WaterProfile>().HasData
                     (

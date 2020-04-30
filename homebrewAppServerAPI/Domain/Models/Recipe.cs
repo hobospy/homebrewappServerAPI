@@ -28,11 +28,11 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public ETypeOfBeer Type { get; set; }
 
+        public IList<Ingredient> Ingredients { get; set; }
+        public IList<Brew> Brews { get; set; }
+
         [ForeignKey("WaterProfileID")]
         public int WaterProfileID { get; set; }
         public WaterProfile WaterProfile { get; set; }
-
-        public IList<Ingredient> Ingredients { get; set; }
-        public IList<Brew> Brews { get; set; }
     }
 }

@@ -43,8 +43,8 @@ namespace homebrewAppServerAPI.Domain.Models
         [NotMapped]
         public Dictionary<string, double> AdditionalAduncts { get; set; }
 
-        [JsonIgnore]
-        [IgnoreDataMember]
-        public IList<Recipe> Recipes { get; set; }
+        //[JsonIgnore]
+        //[IgnoreDataMember]
+        //public IList<Recipe> Recipes { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
@@ -22,8 +24,8 @@ namespace homebrewAppServerAPI.Domain.Models
 
         [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
-        //[JsonIgnore]
-        //[IgnoreDataMember]
+        [JsonIgnore]
+        [IgnoreDataMember]
         public Recipe Recipe { get; set; }
         //public Dictionary<string, double> Grains { get; set; }
         //public Dictionary<string, double> Hops { get; set; }
