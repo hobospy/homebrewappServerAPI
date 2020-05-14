@@ -112,11 +112,52 @@ namespace homebrewAppServerAPI.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Unit")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ID");
 
                     b.HasIndex("RecipeID");
 
                     b.ToTable("Ingredients");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 7001,
+                            Amount = 5.5,
+                            Name = "Pale ale",
+                            RecipeID = 2001,
+                            Type = 0,
+                            Unit = 0
+                        },
+                        new
+                        {
+                            ID = 7002,
+                            Amount = 0.29999999999999999,
+                            Name = "Wheat malt",
+                            RecipeID = 2001,
+                            Type = 0,
+                            Unit = 0
+                        },
+                        new
+                        {
+                            ID = 7003,
+                            Amount = 0.20000000000000001,
+                            Name = "Light crystal malt",
+                            RecipeID = 2001,
+                            Type = 0,
+                            Unit = 0
+                        },
+                        new
+                        {
+                            ID = 7004,
+                            Amount = 65.0,
+                            Name = "Amarillo",
+                            RecipeID = 2001,
+                            Type = 1,
+                            Unit = 1
+                        });
                 });
 
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.Recipe", b =>
@@ -226,28 +267,13 @@ namespace homebrewAppServerAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("BakingSoda")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("CalciumChloride")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("EpsomSalt")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("Gypsum")
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("LacticAcid")
-                        .HasColumnType("REAL");
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);
-
-                    b.Property<double>("NonIodizedSalt")
-                        .HasColumnType("REAL");
 
                     b.HasKey("ID");
 
@@ -257,35 +283,81 @@ namespace homebrewAppServerAPI.Migrations
                         new
                         {
                             ID = 1000,
-                            BakingSoda = 0.0,
-                            CalciumChloride = 0.0,
-                            EpsomSalt = 0.0,
-                            Gypsum = 0.0,
-                            LacticAcid = 0.0,
-                            Name = "APA focused",
-                            NonIodizedSalt = 0.0
+                            Description = "Soft water profile used to accentuate the hop profile",
+                            Name = "APA focused"
                         },
                         new
                         {
                             ID = 1001,
-                            BakingSoda = 0.0,
-                            CalciumChloride = 0.0,
-                            EpsomSalt = 0.0,
-                            Gypsum = 0.0,
-                            LacticAcid = 0.0,
-                            Name = "Lager focused",
-                            NonIodizedSalt = 0.0
+                            Description = "Minimal mineral addition to give a clean flavour to the beer",
+                            Name = "Lager focused"
                         },
                         new
                         {
                             ID = 1002,
-                            BakingSoda = 0.0,
-                            CalciumChloride = 0.0,
-                            EpsomSalt = 0.0,
-                            Gypsum = 0.0,
-                            LacticAcid = 0.0,
-                            Name = "Stout focused",
-                            NonIodizedSalt = 0.0
+                            Description = "Used to accentuate both the malt and hops of the beer",
+                            Name = "Stout focused"
+                        });
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.WaterProfileAddition", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("Unit")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("WaterProfileID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("WaterProfileID");
+
+                    b.ToTable("WaterProfileAdditons");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 9000,
+                            Amount = 6.0,
+                            Name = "Lactic acid",
+                            Unit = 101,
+                            WaterProfileID = 1000
+                        },
+                        new
+                        {
+                            ID = 9001,
+                            Amount = 3.6000000000000001,
+                            Name = "Gypsum",
+                            Unit = 1,
+                            WaterProfileID = 1000
+                        },
+                        new
+                        {
+                            ID = 9002,
+                            Amount = 3.6000000000000001,
+                            Name = "Bicarbonate soda",
+                            Unit = 1,
+                            WaterProfileID = 1000
+                        },
+                        new
+                        {
+                            ID = 9003,
+                            Amount = 3.6000000000000001,
+                            Name = "Epsom salt",
+                            Unit = 1,
+                            WaterProfileID = 1000
                         });
                 });
 
@@ -310,7 +382,7 @@ namespace homebrewAppServerAPI.Migrations
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.Recipe", b =>
                 {
                     b.HasOne("homebrewAppServerAPI.Domain.Models.WaterProfile", "WaterProfile")
-                        .WithMany("Recipes")
+                        .WithMany()
                         .HasForeignKey("WaterProfileID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -321,6 +393,15 @@ namespace homebrewAppServerAPI.Migrations
                     b.HasOne("homebrewAppServerAPI.Domain.Models.Recipe", null)
                         .WithMany("Steps")
                         .HasForeignKey("RecipeID");
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.WaterProfileAddition", b =>
+                {
+                    b.HasOne("homebrewAppServerAPI.Domain.Models.WaterProfile", "WaterProfile")
+                        .WithMany("Additions")
+                        .HasForeignKey("WaterProfileID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

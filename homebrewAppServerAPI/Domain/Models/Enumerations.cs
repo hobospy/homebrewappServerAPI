@@ -77,6 +77,6 @@ namespace homebrewAppServerAPI.Domain.Models
         [Description("l")]
         litre = 100,
         [Description("ml")]
-        mil
+        millilitre
     }
 }

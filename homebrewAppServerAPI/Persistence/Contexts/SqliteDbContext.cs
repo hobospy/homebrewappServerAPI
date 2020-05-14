@@ -8,6 +8,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<WaterProfile> WaterProfiles { get; set; }
+        public DbSet<WaterProfileAddition> WaterProfileAdditons { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
 
         public SqliteDbContext(DbContextOptions<SqliteDbContext> options) : base(options) { }
@@ -29,17 +30,56 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         new WaterProfile
                         {
                             ID = 1000,
-                            Name = "APA focused"
+                            Name = "APA focused",
+                            Description = "Soft water profile used to accentuate the hop profile"
                         },
                         new WaterProfile
                         {
                             ID = 1001,
-                            Name = "Lager focused"
+                            Name = "Lager focused",
+                            Description = "Minimal mineral addition to give a clean flavour to the beer"
                         },
                         new WaterProfile
                         {
                             ID = 1002,
-                            Name = "Stout focused"
+                            Name = "Stout focused",
+                            Description = "Used to accentuate both the malt and hops of the beer"
+                        }
+                    );
+
+                builder.Entity<WaterProfileAddition>().HasData
+                    (
+                        new WaterProfileAddition
+                        {
+                            ID = 9000,
+                            Name = "Lactic acid",
+                            Amount = 6,
+                            Unit = EUnitOfMeasure.millilitre,
+                            WaterProfileID = 1000
+                        },
+                        new WaterProfileAddition
+                        {
+                            ID = 9001,
+                            Name = "Gypsum",
+                            Amount = 3.6,
+                            Unit = EUnitOfMeasure.gram,
+                            WaterProfileID = 1000
+                        },
+                        new WaterProfileAddition
+                        {
+                            ID = 9002,
+                            Name = "Bicarbonate soda",
+                            Amount = 3.6,
+                            Unit = EUnitOfMeasure.gram,
+                            WaterProfileID = 1000
+                        },
+                        new WaterProfileAddition
+                        {
+                            ID = 9003,
+                            Name = "Epsom salt",
+                            Amount = 3.6,
+                            Unit = EUnitOfMeasure.gram,
+                            WaterProfileID = 1000
                         }
                     );
 
