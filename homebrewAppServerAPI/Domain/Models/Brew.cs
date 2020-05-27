@@ -26,8 +26,8 @@ namespace homebrewAppServerAPI.Domain.Models
 
         public double Rating { get; set; } = 0.0;
 
-        [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
+        [ForeignKey("RecipeID")]
         public Recipe Recipe { get; set; }
     }
 }

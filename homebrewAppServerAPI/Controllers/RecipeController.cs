@@ -60,14 +60,14 @@ namespace homebrewAppServerAPI.Controllers
 
         // POST Recipe
         [HttpPost]
-        public async Task<IActionResult> PostRecipeAsync([FromBody] SaveRecipeResource resource)
+        public async Task<IActionResult> PostRecipeAsync([FromBody] UpdateRecipeResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
 
-            var recipe = _mapper.Map<SaveRecipeResource, Recipe>(resource);
+            var recipe = _mapper.Map<UpdateRecipeResource, Recipe>(resource);
             var result = await _recipeService.SaveAsync(recipe);
 
             if (!result.Success)
@@ -81,23 +81,34 @@ namespace homebrewAppServerAPI.Controllers
 
         // PUT Recipe
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRecipeAsync(int id, [FromBody] SaveRecipeResource resource)
+        public async Task<IActionResult> PutRecipeAsync(int id, [FromBody] UpdateRecipeResource resource)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
             }
 
-            var recipe = _mapper.Map<SaveRecipeResource, Recipe>(resource);
-            var result = await _recipeService.UpdateAsync(id, recipe);
+            RecipeResource recipeResult = null;
 
-            if (!result.Success)
+            try
             {
-                return BadRequest(result.Message);
+                var recipe = _mapper.Map<UpdateRecipeResource, Recipe>(resource);
+
+                var result = await _recipeService.UpdateAsync(id, recipe);
+
+                if (!result.Success)
+                {
+                    return BadRequest(result.Message);
+                }
+
+                recipeResult = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+            }
+            catch (System.Exception ex)
+            {
+                var str = ex.Message;
             }
 
-            var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
-            return Ok(recipeResource);
+            return Ok(recipeResult);
         }
 
         // DELETE Recipe

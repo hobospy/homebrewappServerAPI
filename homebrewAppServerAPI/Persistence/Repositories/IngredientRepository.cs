@@ -22,7 +22,20 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task AddAsync(Ingredient ingredient)
         {
-            await _context.Ingredients.AddAsync(ingredient);
+            if (ingredient != null)
+            {
+                var newIngredient = new Ingredient();
+                newIngredient.Name = ingredient.Name;
+                newIngredient.Type = ingredient.Type;
+                newIngredient.Amount = ingredient.Amount;
+                newIngredient.Unit = ingredient.Unit;
+                newIngredient.RecipeID = ingredient.RecipeID;
+
+                _context.Ingredients.Add(newIngredient);
+                _context.SaveChanges();
+
+                await _context.Entry(newIngredient).GetDatabaseValuesAsync();
+            }
         }
 
         public async Task<Ingredient> FindByIdAsync(int id)

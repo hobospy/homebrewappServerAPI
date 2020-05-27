@@ -23,30 +23,5 @@ namespace homebrewAppServerAPI.Domain.Models
         public string Description { get; set; }
 
         public List<WaterProfileAddition> Additions { get; set; }
-
-        //[Required]
-        //public double LacticAcid { get; set; } = 0.0;
-
-        //[Required]
-        //public double Gypsum { get; set; } = 0.0;
-
-        //[Required]
-        //public double CalciumChloride { get; set; } = 0.0;
-
-        //[Required]
-        //public double EpsomSalt { get; set; } = 0.0;
-
-        //[Required]
-        //public double NonIodizedSalt { get; set; } = 0.0;
-
-        //[Required]
-        //public double BakingSoda { get; set; } = 0.0;
-
-        //[NotMapped]
-        //public Dictionary<string, double> AdditionalAduncts { get; set; }
-
-        //[JsonIgnore]
-        //[IgnoreDataMember]
-        //public IList<Recipe> Recipes { get; set; }
     }
 }

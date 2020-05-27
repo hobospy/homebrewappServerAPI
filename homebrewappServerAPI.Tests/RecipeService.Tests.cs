@@ -28,22 +28,24 @@ namespace homebrewappServerAPI.Tests
         public async Task ListAsync_ByDefault_CallsListAsyncOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.ListAsync());
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.ListAsync());
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             await recipeService.ListAsync();
 
-            mockRepository.Verify(m => m.ListAsync(), Times.Once());
+            mockRecipeRepository.Verify(m => m.ListAsync(), Times.Once());
         }
 
         [Test]
         public async Task ListAsync_ByDefault_ReturnsList()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.ListAsync());
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.ListAsync());
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             var response = await recipeService.ListAsync();
 
@@ -57,13 +59,14 @@ namespace homebrewappServerAPI.Tests
         public async Task GetAsync_CalledWithValidID_CallsFindIdAsyncOnce()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             await recipeService.GetAsync(testRecipe.ID);
 
-            mockRepository.Verify(m => m.FindByIdAsync(testRecipe.ID), Times.Once());
+            mockRecipeRepository.Verify(m => m.FindByIdAsync(testRecipe.ID), Times.Once());
         }
 
         [Test]
@@ -71,9 +74,10 @@ namespace homebrewappServerAPI.Tests
         public async Task GetAsync_CalledWithValidID_ReturnsSuccessTrue()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             var response = await recipeService.GetAsync(testRecipe.ID);
 
@@ -85,9 +89,10 @@ namespace homebrewappServerAPI.Tests
         public async Task GetAsync_CalledWithValidID_ReturnsBrew()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID))).ReturnsAsync(testRecipe);
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             var response = await recipeService.GetAsync(testRecipe.ID);
 
@@ -100,9 +105,10 @@ namespace homebrewappServerAPI.Tests
         public async Task GetAsync_CalledWithInvalidID_ThrowsBadRequestException()
         {
             var mockUnitOfWork = new Mock<IUnitOfWork>();
-            var mockRepository = new Mock<IRecipeRepository>();
-            mockRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID)));
-            var recipeService = new RecipeService(mockRepository.Object, mockUnitOfWork.Object);
+            var mockIngredientRepository = new Mock<IIngredientRepository>();
+            var mockRecipeRepository = new Mock<IRecipeRepository>();
+            mockRecipeRepository.Setup(m => m.FindByIdAsync(It.Is<int>(i => i == testRecipe.ID)));
+            var recipeService = new RecipeService(mockRecipeRepository.Object, mockIngredientRepository.Object, mockUnitOfWork.Object);
 
             var ex = Assert.ThrowsAsync<homebrewAPIException>(async () => await recipeService.GetAsync(testRecipe.ID + 1));
 

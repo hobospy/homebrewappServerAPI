@@ -26,10 +26,10 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public EUnitOfMeasure Unit { get; set; }
 
-        [ForeignKey("WaterProfileID")]
         public int WaterProfileID { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
+        [ForeignKey("WaterProfileID")]
         public WaterProfile WaterProfile { get; set; }
     }
 }

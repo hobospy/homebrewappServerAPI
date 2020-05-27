@@ -12,6 +12,7 @@ namespace homebrewAppServerAPI.Resources
         public string Name { get; set; }
         public double Amount { get; set; }
         public string Unit { get; set; }
+        public int RecipeID { get; set; }
 
         //public RecipeResource Recipe { get; set; }
     }

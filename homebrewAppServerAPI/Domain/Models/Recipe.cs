@@ -31,8 +31,8 @@ namespace homebrewAppServerAPI.Domain.Models
         public IList<Ingredient> Ingredients { get; set; }
         public IList<Brew> Brews { get; set; }
 
-        [ForeignKey("WaterProfileID")]
         public int WaterProfileID { get; set; }
+        [ForeignKey("WaterProfileID")]
         public WaterProfile WaterProfile { get; set; }
     }
 }

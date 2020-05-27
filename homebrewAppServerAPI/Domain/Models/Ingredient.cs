@@ -25,10 +25,10 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public EUnitOfMeasure Unit { get; set; }
 
-        [ForeignKey("RecipeID")]
         public int RecipeID { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
+        [ForeignKey("RecipeID")]
         public Recipe Recipe { get; set; }
         //public Dictionary<string, double> Grains { get; set; }
         //public Dictionary<string, double> Hops { get; set; }
