@@ -28,6 +28,8 @@ namespace homebrewAppServerAPI.Domain.Models
         [Required]
         public ETypeOfBeer Type { get; set; }
 
+        public double ExpectedABV { get; set; }
+
         public IList<Ingredient> Ingredients { get; set; }
         public IList<Brew> Brews { get; set; }
 

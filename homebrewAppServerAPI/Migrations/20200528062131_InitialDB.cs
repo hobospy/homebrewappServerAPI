@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace homebrewAppServerAPI.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,6 +31,7 @@ namespace homebrewAppServerAPI.Migrations
                     Favourite = table.Column<bool>(nullable: false),
                     Description = table.Column<string>(maxLength: 500, nullable: false),
                     Type = table.Column<short>(nullable: false),
+                    ExpectedABV = table.Column<double>(nullable: false),
                     WaterProfileID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -151,28 +152,28 @@ namespace homebrewAppServerAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "ID", "Description", "Favourite", "Name", "Type", "WaterProfileID" },
-                values: new object[] { 2001, "Characterized by floral, fruity, citrus-like, piney, resinous American hops, the American pale ale is a medium-bodied beer with low to medium caramel, and carries with it a toasted maltiness.", true, "Amarillo SMaSH", (short)9, 1000 });
+                columns: new[] { "ID", "Description", "ExpectedABV", "Favourite", "Name", "Type", "WaterProfileID" },
+                values: new object[] { 2001, "Characterized by floral, fruity, citrus-like, piney, resinous American hops, the American pale ale is a medium-bodied beer with low to medium caramel, and carries with it a toasted maltiness.", 0.0, true, "Amarillo SMaSH", (short)9, 1000 });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "ID", "Description", "Favourite", "Name", "Type", "WaterProfileID" },
-                values: new object[] { 2000, "Kolsch is a unique style in that it is fermented with ale yeast, but then finished with lagering. The result is the best of both worlds: A light easy drinking pale that finishes crisp and clean. The most basic way to separate beers into different styles is by yeast. By far, the two largest groups are ales and lagers.", true, "Brothers Kolsch Ripoff", (short)23, 1001 });
+                columns: new[] { "ID", "Description", "ExpectedABV", "Favourite", "Name", "Type", "WaterProfileID" },
+                values: new object[] { 2000, "Kolsch is a unique style in that it is fermented with ale yeast, but then finished with lagering. The result is the best of both worlds: A light easy drinking pale that finishes crisp and clean. The most basic way to separate beers into different styles is by yeast. By far, the two largest groups are ales and lagers.", 0.0, true, "Brothers Kolsch Ripoff", (short)23, 1001 });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "ID", "Description", "Favourite", "Name", "Type", "WaterProfileID" },
-                values: new object[] { 2003, "Saison (French, \"season,\" French pronunciation: ​[sɛ. zɔ̃]) is a pale ale that is highly carbonated, fruity, spicy, and often bottle conditioned. It was historically brewed with low alcohol levels, but modern productions of the style have moderate to high levels of alcohol.", false, "Pepper Saison", (short)17, 1001 });
+                columns: new[] { "ID", "Description", "ExpectedABV", "Favourite", "Name", "Type", "WaterProfileID" },
+                values: new object[] { 2003, "Saison (French, \"season,\" French pronunciation: ​[sɛ. zɔ̃]) is a pale ale that is highly carbonated, fruity, spicy, and often bottle conditioned. It was historically brewed with low alcohol levels, but modern productions of the style have moderate to high levels of alcohol.", 0.0, false, "Pepper Saison", (short)17, 1001 });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "ID", "Description", "Favourite", "Name", "Type", "WaterProfileID" },
-                values: new object[] { 2004, "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale.", true, "White Peach Sour", (short)16, 1001 });
+                columns: new[] { "ID", "Description", "ExpectedABV", "Favourite", "Name", "Type", "WaterProfileID" },
+                values: new object[] { 2004, "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale.", 0.0, true, "White Peach Sour", (short)16, 1001 });
 
             migrationBuilder.InsertData(
                 table: "Recipes",
-                columns: new[] { "ID", "Description", "Favourite", "Name", "Type", "WaterProfileID" },
-                values: new object[] { 2002, "A moderate-strength brown beer with a restrained roasty character and bitterness. May have a range of roasted flavors, generally without burnt qualities, and often has a chocolate-caramel-malty profile.", false, "Raspberry Brown Porter", (short)11, 1002 });
+                columns: new[] { "ID", "Description", "ExpectedABV", "Favourite", "Name", "Type", "WaterProfileID" },
+                values: new object[] { 2002, "A moderate-strength brown beer with a restrained roasty character and bitterness. May have a range of roasted flavors, generally without burnt qualities, and often has a chocolate-caramel-malty profile.", 0.0, false, "Raspberry Brown Porter", (short)11, 1002 });
 
             migrationBuilder.InsertData(
                 table: "WaterProfileAdditons",

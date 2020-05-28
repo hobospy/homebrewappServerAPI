@@ -5,6 +5,7 @@ using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -70,6 +71,17 @@ namespace homebrewAppServerAPI.Services
             existingRecipe.Type = updatedRecipe.Type;
             existingRecipe.WaterProfileID = updatedRecipe.WaterProfileID;
 
+            // Remove any ingredient no longer included
+            foreach (var existingIngredient in existingRecipe.Ingredients)
+            {
+                var foundIngredient = updatedRecipe.Ingredients.FirstOrDefault(i => i.ID == existingIngredient.ID);
+
+                if (foundIngredient == null)
+                {
+                     _ingredientRepository.Remove(existingIngredient);
+                }
+            }
+
             foreach (var ingredient in updatedRecipe.Ingredients)
             {
                 var existingIngredient = await _ingredientRepository.FindByIdAsync(ingredient.ID);
@@ -87,8 +99,9 @@ namespace homebrewAppServerAPI.Services
                 else
                 {
                     // Got to add the ingredient before we can store it in the Recipe
-                    await _ingredientRepository.AddAsync(ingredient);
-                    await _unitOfWork.CompleteAsync();
+                    ingredient.RecipeID = id;
+                    var tempIng = await _ingredientRepository.AddAsync(ingredient);
+                    ingredient.ID = tempIng.ID;
                 }
             }
 

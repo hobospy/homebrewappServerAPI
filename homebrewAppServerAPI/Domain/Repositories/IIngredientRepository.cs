@@ -7,7 +7,7 @@ namespace homebrewAppServerAPI.Domain.Repositories
     public interface IIngredientRepository
     {
         Task<IEnumerable<Ingredient>> ListAsync();
-        Task AddAsync(Ingredient ingredient);
+        Task<Ingredient> AddAsync(Ingredient ingredient);
         Task<Ingredient> FindByIdAsync(int id);
         void Update(Ingredient ingredient);
         void Remove(Ingredient ingredient);

@@ -20,7 +20,7 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             return await _context.Ingredients.ToListAsync();
         }
 
-        public async Task AddAsync(Ingredient ingredient)
+        public async Task<Ingredient> AddAsync(Ingredient ingredient)
         {
             if (ingredient != null)
             {
@@ -35,7 +35,10 @@ namespace homebrewAppServerAPI.Persistence.Repositories
                 _context.SaveChanges();
 
                 await _context.Entry(newIngredient).GetDatabaseValuesAsync();
+
+                return (newIngredient);
             }
+            return (null);
         }
 
         public async Task<Ingredient> FindByIdAsync(int id)

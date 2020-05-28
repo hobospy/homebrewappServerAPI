@@ -171,6 +171,9 @@ namespace homebrewAppServerAPI.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(500);
 
+                    b.Property<double>("ExpectedABV")
+                        .HasColumnType("REAL");
+
                     b.Property<bool>("Favourite")
                         .HasColumnType("INTEGER");
 
@@ -196,6 +199,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2000,
                             Description = "Kolsch is a unique style in that it is fermented with ale yeast, but then finished with lagering. The result is the best of both worlds: A light easy drinking pale that finishes crisp and clean. The most basic way to separate beers into different styles is by yeast. By far, the two largest groups are ales and lagers.",
+                            ExpectedABV = 0.0,
                             Favourite = true,
                             Name = "Brothers Kolsch Ripoff",
                             Type = (short)23,
@@ -205,6 +209,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2001,
                             Description = "Characterized by floral, fruity, citrus-like, piney, resinous American hops, the American pale ale is a medium-bodied beer with low to medium caramel, and carries with it a toasted maltiness.",
+                            ExpectedABV = 0.0,
                             Favourite = true,
                             Name = "Amarillo SMaSH",
                             Type = (short)9,
@@ -214,6 +219,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2002,
                             Description = "A moderate-strength brown beer with a restrained roasty character and bitterness. May have a range of roasted flavors, generally without burnt qualities, and often has a chocolate-caramel-malty profile.",
+                            ExpectedABV = 0.0,
                             Favourite = false,
                             Name = "Raspberry Brown Porter",
                             Type = (short)11,
@@ -223,6 +229,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2003,
                             Description = "Saison (French, \"season,\" French pronunciation: ​[sɛ. zɔ̃]) is a pale ale that is highly carbonated, fruity, spicy, and often bottle conditioned. It was historically brewed with low alcohol levels, but modern productions of the style have moderate to high levels of alcohol.",
+                            ExpectedABV = 0.0,
                             Favourite = false,
                             Name = "Pepper Saison",
                             Type = (short)17,
@@ -232,6 +239,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2004,
                             Description = "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale.",
+                            ExpectedABV = 0.0,
                             Favourite = true,
                             Name = "White Peach Sour",
                             Type = (short)16,
