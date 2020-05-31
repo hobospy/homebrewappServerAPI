@@ -15,8 +15,8 @@ namespace homebrewAppServerAPI.Resources
         [Required]
         public string Description { get; set; }
 
-        //[Required]
-        //public double ABV { get; set; }
+        [Required]
+        public double ExpectedABV { get; set; }
 
         [Required]
         public int WaterProfileID { get; set; }
