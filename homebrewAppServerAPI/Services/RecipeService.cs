@@ -70,6 +70,7 @@ namespace homebrewAppServerAPI.Services
             existingRecipe.Description = updatedRecipe.Description;
             existingRecipe.Type = updatedRecipe.Type;
             existingRecipe.WaterProfileID = updatedRecipe.WaterProfileID;
+            existingRecipe.ExpectedABV = updatedRecipe.ExpectedABV;
 
             // Remove any ingredient no longer included
             foreach (var existingIngredient in existingRecipe.Ingredients)
@@ -107,10 +108,12 @@ namespace homebrewAppServerAPI.Services
 
             try
             {
-                _recipeRepository.Update(existingRecipe);
-                await _unitOfWork.CompleteAsync();
+                //_recipeRepository.Update(existingRecipe);
+                var returnRecipe = await _recipeRepository.Update(existingRecipe);
+                //await _unitOfWork.CompleteAsync();
 
-                return new RecipeResponse(existingRecipe);
+                //return new RecipeResponse(existingRecipe);
+                return new RecipeResponse(returnRecipe);
             }
             catch (Exception ex)
             {

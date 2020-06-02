@@ -14,5 +14,8 @@ namespace homebrewAppServerAPI.Resources
         public WaterProfileResource WaterProfile { get; set; }
 
         public List<IngredientResource> Ingredients { get; set; }
+
+
+        public List<RecipeStep> Steps { get; set; }
     }
 }

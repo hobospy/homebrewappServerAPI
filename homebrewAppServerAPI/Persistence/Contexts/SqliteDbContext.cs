@@ -7,6 +7,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
     {
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeStep> RecipeSteps { get; set; }
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<WaterProfileAddition> WaterProfileAdditons { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
@@ -127,6 +128,23 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Description = "Sour beer is beer which has an intentionally acidic, tart, or sour taste. Traditional sour beer styles include Belgian lambics, gueuze, and Flanders red ale.",
                             Favourite = true,
                             WaterProfileID = 1001
+                        }
+                    );
+
+                builder.Entity<RecipeStep>().HasData(
+                        new RecipeStep
+                        {
+                            ID = 9000,
+                            Description = "Add grain and mash in",
+                            Timer = 5,
+                            RecipeID = 2001
+                        },
+                        new RecipeStep
+                        {
+                            ID = 9001,
+                            Description = "Mash out and get to boil",
+                            Timer = 15,
+                            RecipeID = 2001
                         }
                     );
 

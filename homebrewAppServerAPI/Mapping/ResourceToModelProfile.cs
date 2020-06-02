@@ -11,6 +11,8 @@ namespace homebrewAppServerAPI.Mapping
     {
         public ResourceToModelProfile()
         {
+            CreateMap<RecipeStepResource, RecipeStep>();
+
             CreateMap<IngredientResource, Ingredient>()
                 .ForMember(src => src.Type,
                            opt => opt.MapFrom(source => Enum.GetValues(typeof(ETypeOfIngredient))

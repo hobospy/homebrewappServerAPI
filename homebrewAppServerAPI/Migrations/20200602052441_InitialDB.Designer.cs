@@ -9,7 +9,7 @@ using homebrewAppServerAPI.Persistence.Contexts;
 namespace homebrewAppServerAPI.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20200528062131_InitialDB")]
+    [Migration("20200602052441_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -258,7 +258,7 @@ namespace homebrewAppServerAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("RecipeID")
+                    b.Property<int>("RecipeID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Timer")
@@ -268,7 +268,23 @@ namespace homebrewAppServerAPI.Migrations
 
                     b.HasIndex("RecipeID");
 
-                    b.ToTable("RecipeStep");
+                    b.ToTable("RecipeSteps");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 9000,
+                            Description = "Add grain and mash in",
+                            RecipeID = 2001,
+                            Timer = 5
+                        },
+                        new
+                        {
+                            ID = 9001,
+                            Description = "Mash out and get to boil",
+                            RecipeID = 2001,
+                            Timer = 15
+                        });
                 });
 
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.WaterProfile", b =>
@@ -400,9 +416,11 @@ namespace homebrewAppServerAPI.Migrations
 
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.RecipeStep", b =>
                 {
-                    b.HasOne("homebrewAppServerAPI.Domain.Models.Recipe", null)
+                    b.HasOne("homebrewAppServerAPI.Domain.Models.Recipe", "Recipe")
                         .WithMany("Steps")
-                        .HasForeignKey("RecipeID");
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.WaterProfileAddition", b =>

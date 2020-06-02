@@ -33,12 +33,18 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             return await _context.Recipes
                                     .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
                                     .Include(p => p.Ingredients)
+                                    .Include(p => p.Steps)
                                     .FirstOrDefaultAsync(recipe => recipe.ID == id);
         }
 
-        public void Update(Recipe recipe)
+        public async Task<Recipe> Update(Recipe recipe)
         {
             _context.Recipes.Update(recipe);
+
+            return await _context.Recipes
+                                    .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
+                                    .Include(p => p.Ingredients)
+                                    .FirstOrDefaultAsync(recipeToFind => recipeToFind.ID == recipe.ID);
         }
 
         public void Remove(Recipe recipe)

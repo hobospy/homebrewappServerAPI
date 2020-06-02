@@ -115,24 +115,24 @@ namespace homebrewAppServerAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RecipeStep",
+                name: "RecipeSteps",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Description = table.Column<string>(nullable: true),
                     Timer = table.Column<int>(nullable: false),
-                    RecipeID = table.Column<int>(nullable: true)
+                    RecipeID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RecipeStep", x => x.ID);
+                    table.PrimaryKey("PK_RecipeSteps", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_RecipeStep_Recipes_RecipeID",
+                        name: "FK_RecipeSteps_Recipes_RecipeID",
                         column: x => x.RecipeID,
                         principalTable: "Recipes",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -235,6 +235,16 @@ namespace homebrewAppServerAPI.Migrations
                 columns: new[] { "ID", "Amount", "Name", "RecipeID", "Type", "Unit" },
                 values: new object[] { 7004, 65.0, "Amarillo", 2001, 1, 1 });
 
+            migrationBuilder.InsertData(
+                table: "RecipeSteps",
+                columns: new[] { "ID", "Description", "RecipeID", "Timer" },
+                values: new object[] { 9000, "Add grain and mash in", 2001, 5 });
+
+            migrationBuilder.InsertData(
+                table: "RecipeSteps",
+                columns: new[] { "ID", "Description", "RecipeID", "Timer" },
+                values: new object[] { 9001, "Mash out and get to boil", 2001, 15 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Brews_RecipeID",
                 table: "Brews",
@@ -251,8 +261,8 @@ namespace homebrewAppServerAPI.Migrations
                 column: "WaterProfileID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RecipeStep_RecipeID",
-                table: "RecipeStep",
+                name: "IX_RecipeSteps_RecipeID",
+                table: "RecipeSteps",
                 column: "RecipeID");
 
             migrationBuilder.CreateIndex(
@@ -270,7 +280,7 @@ namespace homebrewAppServerAPI.Migrations
                 name: "Ingredients");
 
             migrationBuilder.DropTable(
-                name: "RecipeStep");
+                name: "RecipeSteps");
 
             migrationBuilder.DropTable(
                 name: "WaterProfileAdditons");

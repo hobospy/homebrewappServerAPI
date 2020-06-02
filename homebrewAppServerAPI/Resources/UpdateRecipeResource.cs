@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using homebrewAppServerAPI.Domain.Models;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace homebrewAppServerAPI.Resources
@@ -22,5 +23,7 @@ namespace homebrewAppServerAPI.Resources
         public int WaterProfileID { get; set; }
 
         public List<IngredientResource> Ingredients { get; set; }
+
+        public List<RecipeStepResource> Steps { get; set; }
     }
 }

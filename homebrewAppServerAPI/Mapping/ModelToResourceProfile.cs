@@ -10,6 +10,8 @@ namespace homebrewAppServerAPI.Mapping
     {
         public ModelToResourceProfile()
         {
+            CreateMap<RecipeStep, RecipeStepResource>();
+
             CreateMap<Ingredient, IngredientResource>()
                 .ForMember(src => src.Type,
                            opt => opt.MapFrom(src => src.Type.ToDescriptionString()))
@@ -26,7 +28,9 @@ namespace homebrewAppServerAPI.Mapping
                 .ForMember(src => src.Type,
                            opt => opt.MapFrom(src => src.Type.ToDescriptionString()))
                 .ForMember(src => src.Ingredients,
-                           opt => opt.MapFrom(src => src.Ingredients));
+                           opt => opt.MapFrom(src => src.Ingredients))
+                .ForMember(src => src.Steps,
+                           opt => opt.MapFrom(src => src.Steps));
 
             CreateMap<Brew, BrewResource>();
         }

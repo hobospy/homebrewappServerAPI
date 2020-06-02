@@ -22,8 +22,8 @@ namespace homebrewAppServerAPI.Domain.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        [JsonIgnore]
-        public List<RecipeStep> Steps { get; set; }
+        //[JsonIgnore]
+        public IList<RecipeStep> Steps { get; set; }
 
         [Required]
         public ETypeOfBeer Type { get; set; }
