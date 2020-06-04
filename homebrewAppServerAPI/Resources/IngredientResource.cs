@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace homebrewAppServerAPI.Resources
+﻿namespace homebrewAppServerAPI.Resources
 {
     public class IngredientResource
     {
@@ -13,7 +8,5 @@ namespace homebrewAppServerAPI.Resources
         public double Amount { get; set; }
         public string Unit { get; set; }
         public int RecipeID { get; set; }
-
-        //public RecipeResource Recipe { get; set; }
     }
 }

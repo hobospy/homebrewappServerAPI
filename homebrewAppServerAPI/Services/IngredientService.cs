@@ -61,7 +61,7 @@ namespace homebrewAppServerAPI.Services
             }
             catch (Exception ex)
             {
-                var msg = "An error occurred when saving the brew";
+                var msg = "An error occurred when saving the ingredient";
                 msg += ingredient != null ? $" ({ingredient.Name}: {ex.Message}" : $": {ex.Message}";
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", msg);
             }
@@ -73,7 +73,7 @@ namespace homebrewAppServerAPI.Services
 
             if (existingIngredient == null)
             {
-                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to update brew, can't find a brew with ID: {id}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to update ingredient, can't find a ingredient with ID: {id}");
             }
 
             existingIngredient.Name = ingredient.Name;
@@ -95,7 +95,7 @@ namespace homebrewAppServerAPI.Services
         {
             if (patch == null)
             {
-                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch brew, patch information is null");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch ingredient, patch information is null");
             }
 
             var existingIngredient = await _ingredientRepository.FindByIdAsync(id);

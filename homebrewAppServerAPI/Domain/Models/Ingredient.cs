@@ -30,8 +30,5 @@ namespace homebrewAppServerAPI.Domain.Models
         [IgnoreDataMember]
         [ForeignKey("RecipeID")]
         public Recipe Recipe { get; set; }
-        //public Dictionary<string, double> Grains { get; set; }
-        //public Dictionary<string, double> Hops { get; set; }
-        //public Dictionary<string, double> Adjuncts { get; set; }
     }
 }

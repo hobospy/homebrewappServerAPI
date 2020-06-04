@@ -15,12 +15,14 @@ namespace homebrewAppServerAPI.Services
     {
         private readonly IRecipeRepository _recipeRepository;
         private readonly IIngredientRepository _ingredientRepository;
+        private readonly IRecipeStepRepository _recipeStepRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RecipeService(IRecipeRepository recipeRepository, IIngredientRepository ingredientRepository, IUnitOfWork unitOfWork)
+        public RecipeService(IRecipeRepository recipeRepository, IIngredientRepository ingredientRepository, IRecipeStepRepository recipeStepRepository, IUnitOfWork unitOfWork)
         {
             this._recipeRepository = recipeRepository;
             this._ingredientRepository = ingredientRepository;
+            this._recipeStepRepository = recipeStepRepository;
             this._unitOfWork = unitOfWork;
         }
 
@@ -103,6 +105,40 @@ namespace homebrewAppServerAPI.Services
                     ingredient.RecipeID = id;
                     var tempIng = await _ingredientRepository.AddAsync(ingredient);
                     ingredient.ID = tempIng.ID;
+                }
+            }
+
+            // I'm not sure this is actually correct ..... believe the Recipe has a copy of these recipe steps
+
+            // Remove any step no longer included
+            foreach (var existingStep in existingRecipe.Steps)
+            {
+                var foundStep = updatedRecipe.Steps.FirstOrDefault(i => i.ID == existingStep.ID);
+
+                if (foundStep == null)
+                {
+                    _recipeStepRepository.Remove(existingStep);
+                }
+            }
+
+            foreach (var recipeStep in updatedRecipe.Steps)
+            {
+                var existingRecipeStep = await _recipeStepRepository.FindByIdAsync(recipeStep.ID);
+
+                if (existingRecipeStep != null)
+                {
+                    existingRecipeStep.Description = recipeStep.Description;
+                    existingRecipeStep.Timer = recipeStep.Timer;
+
+                    _recipeStepRepository.Update(existingRecipeStep);
+                    await _unitOfWork.CompleteAsync();
+                }
+                else
+                {
+                    // Got to add the ingredient before we can store it in the Recipe
+                    recipeStep.RecipeID = id;
+                    var tempRecipeStep = await _recipeStepRepository.AddAsync(recipeStep);
+                    recipeStep.ID = tempRecipeStep.ID;
                 }
             }
 

@@ -8,6 +8,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
     {
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeStep> RecipeSteps { get; set; }
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
 
@@ -162,6 +163,28 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         new Ingredient { ID = 5000, Type = ETypeOfIngredient.Grains, Name = "Pale ale malt", Amount = 5.1, RecipeID = 2000 },
                         new Ingredient { ID = 5001, Type = ETypeOfIngredient.Grains, Name = "Chocolate malt", Amount = 0.1, RecipeID = 2000 },
                         new Ingredient { ID = 5002, Type = ETypeOfIngredient.Hops, Name = "Amarillo", Amount = 0.04, RecipeID = 2000 }
+                    );
+
+                builder.Entity<RecipeStep>().ToTable("RecipeSteps");
+                builder.Entity<RecipeStep>().HasKey(p => p.ID);
+                builder.Entity<RecipeStep>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
+                builder.Entity<RecipeStep>().Property(p => p.Description).IsRequired().HasMaxLength(500);
+
+                builder.Entity<RecipeStep>().HasData(
+                        new RecipeStep
+                        {
+                            ID = 9000,
+                            Description = "Add grain and mash in",
+                            Timer = 5,
+                            RecipeID = 2001
+                        },
+                        new RecipeStep
+                        {
+                            ID = 9001,
+                            Description = "Mash out and get to boil",
+                            Timer = 15,
+                            RecipeID = 2001
+                        }
                     );
             }
         }

@@ -14,12 +14,6 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 #else
         public IngredientRepository(AppDbContext context) : base(context) { }
 #endif
-
-        public async Task<IEnumerable<Ingredient>> ListAsync()
-        {
-            return await _context.Ingredients.ToListAsync();
-        }
-
         public async Task<Ingredient> AddAsync(Ingredient ingredient)
         {
             if (ingredient != null)
@@ -46,14 +40,19 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             return await _context.Ingredients.FirstOrDefaultAsync(ingredient => ingredient.ID == id);
         }
 
-        public void Update(Ingredient ingredient)
+        public async Task<IEnumerable<Ingredient>> ListAsync()
         {
-            _context.Ingredients.Update(ingredient);
+            return await _context.Ingredients.ToListAsync();
         }
 
         public void Remove(Ingredient ingredient)
         {
             _context.Ingredients.Remove(ingredient);
+        }
+
+        public void Update(Ingredient ingredient)
+        {
+            _context.Ingredients.Update(ingredient);
         }
     }
 }

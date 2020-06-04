@@ -34,7 +34,16 @@ namespace homebrewAppServerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+#if DEBUG
             services.AddCors();
+#else
+            services.AddCors(o => o.AddPolicy("MyCorsPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+#endif
 
             services.AddControllersWithViews().AddNewtonsoftJson();
 
@@ -58,10 +67,12 @@ namespace homebrewAppServerAPI
             });
 #endif
             services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
             services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
             services.AddScoped<IRecipeRepository, RecipeRepository>();
             services.AddScoped<IBrewRepository, BrewRepository>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<IRecipeStepService, RecipeStepService>();
             services.AddScoped<IWaterProfileService, WaterProfileService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IBrewService, BrewService>();
@@ -106,8 +117,9 @@ namespace homebrewAppServerAPI
 #if DEBUG
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
 #else
-            app.UseCors("AllowCors");
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod());
+            //app.UseCors("AllowCors");
+            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("MyCorsPolicy");
 #endif
             app.UseMvc();
         }

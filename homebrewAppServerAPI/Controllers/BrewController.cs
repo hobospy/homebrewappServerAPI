@@ -16,7 +16,7 @@ namespace homebrewAppServerAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [EnableCors(origins: "http://localhost:3000/", headers: "*", methods: "*")]
+    //[EnableCors(origins: "http://localhost:3000/", headers: "*", methods: "*")]
     public class BrewController : ControllerBase
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
