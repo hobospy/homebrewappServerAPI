@@ -8,6 +8,7 @@ using homebrewAppServerAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,51 +35,66 @@ namespace homebrewAppServerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-#if DEBUG
-            services.AddCors();
-#else
-            services.AddCors(o => o.AddPolicy("MyCorsPolicy", builder =>
+            log.Error("Entered ConfigureServices");
+
+            try
             {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
+#if DEBUG
+                services.AddCors();
+#else
+                services.AddCors(o => o.AddPolicy("MyCorsPolicy", builder =>
+                {
+                    builder.SetIsOriginAllowed(isOriginAllowed: _ => true)
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                }));
 #endif
 
-            services.AddControllersWithViews().AddNewtonsoftJson();
+                services.AddControllersWithViews().AddNewtonsoftJson();
 
-            services.AddControllersWithViews(options =>
-            {
-                options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
-            });
+                services.AddControllersWithViews(options =>
+                {
+                    options.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+                });
 
-            services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
+                services.AddMvc(options => options.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
 
 #if USE_SQLITE
-            services.AddDbContext<SqliteDbContext>(options =>
-            {
-                options.UseSqlite("Data Source=./homebrew.db");
-            });
+                log.Error("Using SQLITE");
+                services.AddDbContext<SqliteDbContext>(options =>
+                {
+                    options.UseSqlite("Data Source=./homebrew.db");
+                });
 #else
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseInMemoryDatabase("homebrewapp-api-in-memory");
             });
 #endif
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
-            services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IBrewRepository, BrewRepository>();
-            services.AddScoped<IIngredientService, IngredientService>();
-            services.AddScoped<IRecipeStepService, RecipeStepService>();
-            services.AddScoped<IWaterProfileService, WaterProfileService>();
-            services.AddScoped<IRecipeService, RecipeService>();
-            services.AddScoped<IBrewService, BrewService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+                log.Error("Adding services");
+                services.AddScoped<IIngredientRepository, IngredientRepository>();
+                services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
+                services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
+                services.AddScoped<IRecipeRepository, RecipeRepository>();
+                services.AddScoped<IBrewRepository, BrewRepository>();
+                services.AddScoped<IIngredientService, IngredientService>();
+                services.AddScoped<IRecipeStepService, RecipeStepService>();
+                services.AddScoped<IWaterProfileService, WaterProfileService>();
+                services.AddScoped<IRecipeService, RecipeService>();
+                services.AddScoped<IBrewService, BrewService>();
+                services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddAutoMapper(typeof(Startup));
+                log.Error("Adding auto mapper");
+                services.AddAutoMapper(typeof(Startup));
+            }
+            catch (System.Exception ex)
+            {
+                log.Error(ex.Message);
+                if (ex.InnerException != null )
+                    log.Error(ex.InnerException);
+            }
         }
 
         private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter()
@@ -103,6 +119,8 @@ namespace homebrewAppServerAPI
         {
             loggerFactory.AddLog4Net();
 
+            log.Error("Entered Configure");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -114,13 +132,15 @@ namespace homebrewAppServerAPI
             }
 
             app.UseHttpsRedirection();
+
 #if DEBUG
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
 #else
-            //app.UseCors("AllowCors");
-            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            log.Error("Using cors policy");
             app.UseCors("MyCorsPolicy");
 #endif
+
+            log.Error("Using MVC");
             app.UseMvc();
         }
     }
