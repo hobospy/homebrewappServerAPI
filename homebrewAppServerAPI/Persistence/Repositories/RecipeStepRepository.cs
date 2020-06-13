@@ -3,7 +3,6 @@ using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Persistence.Repositories

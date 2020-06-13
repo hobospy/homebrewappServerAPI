@@ -2,6 +2,7 @@ using AutoMapper;
 using homebrewAppServerAPI.Domain.ExceptionHandling;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
+using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Persistence.Contexts;
 using homebrewAppServerAPI.Persistence.Repositories;
 using homebrewAppServerAPI.Services;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Linq;
 
 namespace homebrewAppServerAPI
@@ -35,16 +37,20 @@ namespace homebrewAppServerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            log.Error("Entered ConfigureServices");
-
             try
             {
 #if DEBUG
+                log.Debug("Entered ConfigureServices (debug version)");
+
                 services.AddCors();
 #else
+                log.Debug("Entered ConfigureServices (release version)");
+
+                string[] whitelist = { "http://localhost:3000", "http://homebrew-react-app.s3-ap-southeast-2.amazonaws.com/" };
                 services.AddCors(o => o.AddPolicy("MyCorsPolicy", builder =>
                 {
-                    builder.SetIsOriginAllowed(isOriginAllowed: _ => true)
+                    //builder.SetIsOriginAllowed((host) => whitelist.Contains(host))
+                    builder.SetIsOriginAllowed(_ => true)
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials();
@@ -62,18 +68,19 @@ namespace homebrewAppServerAPI
                 services.AddMvc(options => options.Filters.Add(typeof(homebrewAPIExceptionFilter)));
 
 #if USE_SQLITE
-                log.Error("Using SQLITE");
+                log.Debug("Using SQLITE data source");
                 services.AddDbContext<SqliteDbContext>(options =>
                 {
                     options.UseSqlite("Data Source=./homebrew.db");
                 });
 #else
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("homebrewapp-api-in-memory");
-            });
+                log.Debug("Using EF in memory data source");
+                services.AddDbContext<AppDbContext>(options =>
+                {
+                    options.UseInMemoryDatabase("homebrewapp-api-in-memory");
+                });
 #endif
-                log.Error("Adding services");
+                log.Debug("Adding services");
                 services.AddScoped<IIngredientRepository, IngredientRepository>();
                 services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
                 services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
@@ -86,7 +93,7 @@ namespace homebrewAppServerAPI
                 services.AddScoped<IBrewService, BrewService>();
                 services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-                log.Error("Adding auto mapper");
+                log.Debug("Adding auto mapper");
                 services.AddAutoMapper(typeof(Startup));
             }
             catch (System.Exception ex)
@@ -119,28 +126,31 @@ namespace homebrewAppServerAPI
         {
             loggerFactory.AddLog4Net();
 
-            log.Error("Entered Configure");
+            log.Debug("Entered Configure");
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
+            app.UseOptions();
 
 #if DEBUG
             app.UseCors(options => options.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader());
 #else
-            log.Error("Using cors policy");
+            log.Debug("Using configured cors policy ('MyCorsPolicy')");
             app.UseCors("MyCorsPolicy");
 #endif
 
-            log.Error("Using MVC");
+            if (env.IsDevelopment())
+            {
+                log.Debug("Environment is development mode");
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                log.Debug("Environment is not development mode");
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+            app.UseHttpsRedirection();
+
+            log.Debug("Using MVC");
             app.UseMvc();
         }
     }

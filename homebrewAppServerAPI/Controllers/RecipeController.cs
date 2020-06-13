@@ -83,6 +83,8 @@ namespace homebrewAppServerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeAsync(int id, [FromBody] UpdateRecipeResource resource)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} for Recipe {id}");
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState.GetErrorMessages());
@@ -98,14 +100,17 @@ namespace homebrewAppServerAPI.Controllers
 
                 if (!result.Success)
                 {
+                    log.Debug($"Unable to update the recipe");
                     return BadRequest(result.Message);
                 }
 
+                log.Debug($"Mapping the updated recipe");
                 recipeResult = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
             }
             catch (System.Exception ex)
             {
                 var str = ex.Message;
+                log.Debug($"Error caught within {Helper.GetCurrentMethod()}, {ex.Message} - {(ex.InnerException != null ? ex.InnerException.Message : "No inner exception")}");
             }
 
             return Ok(recipeResult);

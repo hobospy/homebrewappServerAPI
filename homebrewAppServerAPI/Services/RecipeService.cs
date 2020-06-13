@@ -37,7 +37,7 @@ namespace homebrewAppServerAPI.Services
 
             if (recipeDetail == null)
             {
-                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a brew with the ID: {id}");
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to find a recipe with the ID: {id}");
             }
 
             return new RecipeResponse(recipeDetail);
@@ -108,8 +108,6 @@ namespace homebrewAppServerAPI.Services
                 }
             }
 
-            // I'm not sure this is actually correct ..... believe the Recipe has a copy of these recipe steps
-
             // Remove any step no longer included
             foreach (var existingStep in existingRecipe.Steps)
             {
@@ -144,11 +142,8 @@ namespace homebrewAppServerAPI.Services
 
             try
             {
-                //_recipeRepository.Update(existingRecipe);
                 var returnRecipe = await _recipeRepository.Update(existingRecipe);
-                //await _unitOfWork.CompleteAsync();
 
-                //return new RecipeResponse(existingRecipe);
                 return new RecipeResponse(returnRecipe);
             }
             catch (Exception ex)
