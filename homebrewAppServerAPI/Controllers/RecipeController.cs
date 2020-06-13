@@ -5,6 +5,7 @@ using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Extensions;
 using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Resources;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Net;
@@ -114,6 +115,28 @@ namespace homebrewAppServerAPI.Controllers
             }
 
             return Ok(recipeResult);
+        }
+
+        // PATCH Recipe
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchRecipeAsync(int id, [FromBody] JsonPatchDocument<Recipe> patch)
+        {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
+
+            if (!ModelState.IsValid)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
+            }
+
+            var result = await _recipeService.PatchAsync(id, patch);
+
+            if (!result.Success)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch changes: ${result.Message}");
+            }
+
+            var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+            return Ok(recipeResource);
         }
 
         // DELETE Recipe

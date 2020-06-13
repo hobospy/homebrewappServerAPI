@@ -3,6 +3,7 @@ using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,6 +151,34 @@ namespace homebrewAppServerAPI.Services
             {
                 // Do some logging stuff
                 return new RecipeResponse($"An error occured when updating the recipe: {ex.Message}");
+            }
+        }
+
+        public async Task<RecipeResponse> PatchAsync(int id, JsonPatchDocument<Recipe> patch)
+        {
+            if (patch == null)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch recipe, patch information is null");
+            }
+
+            var existingRecipe = await _recipeRepository.FindByIdAsync(id);
+
+            if (existingRecipe == null)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch recipe, can't find a recipe with ID: {id}");
+            }
+
+            patch.ApplyTo(existingRecipe);
+
+            try
+            {
+                await _recipeRepository.Update(existingRecipe);
+
+                return new RecipeResponse(existingRecipe);
+            }
+            catch (Exception ex)
+            {
+                throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when patching the recipe ({existingRecipe.Name}): {ex.Message}");
             }
         }
 
