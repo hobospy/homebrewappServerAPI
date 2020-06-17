@@ -8,7 +8,7 @@ namespace homebrewAppServerAPI.Domain.Repositories
     public interface IRecipeRepository
     {
         Task<IEnumerable<Recipe>> ListAsync();
-        Task AddAsync(Recipe recipe);
+        Task<Recipe> AddAsync(Recipe recipe);
         Task<Recipe> FindByIdAsync(int id);
         Task<Recipe> Update(Recipe recipe);
         void Remove(Recipe recipe);

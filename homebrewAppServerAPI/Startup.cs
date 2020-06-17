@@ -71,6 +71,9 @@ namespace homebrewAppServerAPI
                 log.Debug("Using SQLITE data source");
                 services.AddDbContext<SqliteDbContext>(options =>
                 {
+#if DEBUG
+                    options.EnableSensitiveDataLogging();
+#endif
                     options.UseSqlite("Data Source=./homebrew.db");
                 });
 #else

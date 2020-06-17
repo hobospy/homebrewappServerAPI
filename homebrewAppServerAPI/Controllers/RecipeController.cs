@@ -63,20 +63,40 @@ namespace homebrewAppServerAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> PostRecipeAsync([FromBody] UpdateRecipeResource resource)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
+
+            if (ModelState == null)
+                log.Debug("ModelState is null");
+            else
+                log.Debug("ModelState is not null");
+
             if (!ModelState.IsValid)
             {
+                log.Debug($"ModelState invalid");
                 return BadRequest(ModelState.GetErrorMessages());
             }
+            else
+                log.Debug($"ModelState valid");
 
+            log.Debug($"resource is {(resource is null ? "null" : "not null")}");
+
+            log.Debug($"About to map {resource.Name} to Recipe class");
             var recipe = _mapper.Map<UpdateRecipeResource, Recipe>(resource);
+
+            log.Debug($"Working on saving {recipe.Name}");
             var result = await _recipeService.SaveAsync(recipe);
 
             if (!result.Success)
             {
+                log.Debug($"Returning bad request for {recipe.Name}");
+
                 return BadRequest(result.Message);
             }
 
+            log.Debug($"Working on mapping {recipe.Name}");
             var recipeResource = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
+
+            log.Debug($"Returning OK for {recipe.Name}");
             return Ok(recipeResource);
         }
 
@@ -84,7 +104,7 @@ namespace homebrewAppServerAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutRecipeAsync(int id, [FromBody] UpdateRecipeResource resource)
         {
-            log.Debug($"Called {Helper.GetCurrentMethod()} for Recipe {id}");
+            log.Debug($"Called {Helper.GetCurrentMethod()} for recipe {id}");
 
             if (!ModelState.IsValid)
             {
@@ -101,16 +121,15 @@ namespace homebrewAppServerAPI.Controllers
 
                 if (!result.Success)
                 {
-                    log.Debug($"Unable to update the recipe");
+                    log.Debug($"Unable to update recipe {id}");
                     return BadRequest(result.Message);
                 }
 
-                log.Debug($"Mapping the updated recipe");
+                log.Debug($"Mapping updated recipe {id}");
                 recipeResult = _mapper.Map<Recipe, RecipeResource>(result.Recipe);
             }
             catch (System.Exception ex)
             {
-                var str = ex.Message;
                 log.Debug($"Error caught within {Helper.GetCurrentMethod()}, {ex.Message} - {(ex.InnerException != null ? ex.InnerException.Message : "No inner exception")}");
             }
 

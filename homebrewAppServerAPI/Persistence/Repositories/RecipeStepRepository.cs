@@ -1,5 +1,6 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
+using homebrewAppServerAPI.Helpers;
 using homebrewAppServerAPI.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 {
     public class RecipeStepRepository : BaseRepository, IRecipeStepRepository
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
 #if USE_SQLITE
         public RecipeStepRepository(SqliteDbContext context) : base(context) { }
 #else
@@ -16,6 +19,9 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 #endif
         public async Task<RecipeStep> AddAsync(RecipeStep recipeStep)
         {
+            //TODO: Think this should be moved to the service layer
+            log.Debug($"Called {Helper.GetCurrentMethod()}");
+
             if (recipeStep != null)
             {
                 var newRecipeStep = new RecipeStep();
@@ -23,10 +29,11 @@ namespace homebrewAppServerAPI.Persistence.Repositories
                 newRecipeStep.Timer = recipeStep.Timer;
                 newRecipeStep.RecipeID = recipeStep.RecipeID;
 
+                log.Debug($"Adding {recipeStep.Description} recipe step basic properties");
                 _context.RecipeSteps.Add(newRecipeStep);
                 _context.SaveChanges();
-
                 await _context.Entry(newRecipeStep).GetDatabaseValuesAsync();
+                _context.Entry<RecipeStep>(newRecipeStep).State = EntityState.Detached;
 
                 return (newRecipeStep);
             }

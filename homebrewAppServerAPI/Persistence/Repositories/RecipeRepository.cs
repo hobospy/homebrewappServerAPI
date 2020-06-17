@@ -23,9 +23,14 @@ namespace homebrewAppServerAPI.Persistence.Repositories
                                     .ToListAsync();
         }
 
-        public async Task AddAsync(Recipe recipe)
+        public async Task<Recipe> AddAsync(Recipe recipe)
         {
-            await _context.Recipes.AddAsync(recipe);
+            _context.Recipes.Add(recipe);
+            _context.SaveChanges();
+
+            await _context.Entry(recipe).GetDatabaseValuesAsync();
+
+            return recipe;
         }
 
         public async Task<Recipe> FindByIdAsync(int id)
@@ -40,6 +45,7 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         public async Task<Recipe> Update(Recipe recipe)
         {
             _context.Recipes.Update(recipe);
+            await _context.SaveChangesAsync();
 
             return await _context.Recipes
                                     .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
