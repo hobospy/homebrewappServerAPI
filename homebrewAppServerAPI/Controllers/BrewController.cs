@@ -62,7 +62,7 @@ namespace homebrewAppServerAPI.Controllers
 
         // POST Brew
         [HttpPost]
-        public async Task<IActionResult> PostBrewAsync([FromBody] SaveBrewResource resource)
+        public async Task<IActionResult> PostBrewAsync([FromBody] NewBrewResource resource)
         {
             log.Debug($"Called {Helper.GetCurrentMethod()}");
 
@@ -71,7 +71,7 @@ namespace homebrewAppServerAPI.Controllers
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
             }
 
-            var brew = _mapper.Map<SaveBrewResource, Brew>(resource);
+            var brew = _mapper.Map<NewBrewResource, Brew>(resource);
             var result = await _brewService.SaveAsync(brew);
 
             if (!result.Success)
@@ -85,7 +85,7 @@ namespace homebrewAppServerAPI.Controllers
 
         // PUT Brew
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrewAsync(int id, [FromBody] SaveBrewResource resource)
+        public async Task<IActionResult> PutBrewAsync(int id, [FromBody] NewBrewResource resource)
         {
             log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");
 
@@ -94,7 +94,7 @@ namespace homebrewAppServerAPI.Controllers
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Supplied data invalid: ${ModelState.GetErrorMessages()}");
             }
 
-            var brew = _mapper.Map<SaveBrewResource, Brew>(resource);
+            var brew = _mapper.Map<NewBrewResource, Brew>(resource);
             var result = await _brewService.UpdateAsync(id, brew);
 
             if (!result.Success)
@@ -108,7 +108,6 @@ namespace homebrewAppServerAPI.Controllers
 
         // PATCH Brew
         [HttpPatch("{id}")]
-        //[Consumes(MediaTypes.Application.JsonPatch)]
         public async Task<IActionResult> PatchBrewAsync(int id, [FromBody] JsonPatchDocument<Brew> patch)
         {
             log.Debug($"Called {Helper.GetCurrentMethod()} with ID: {id}");

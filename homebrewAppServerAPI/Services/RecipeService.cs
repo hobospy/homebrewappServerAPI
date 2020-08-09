@@ -67,21 +67,21 @@ namespace homebrewAppServerAPI.Services
                 var storedRecipe = await _recipeRepository.AddAsync(newRecipe);
 
                 // Add all the linked items to their respective repostiories
-                foreach (var ingredient in recipe.Ingredients)
-                {
-                    var newIngredient = new Ingredient();
-                    newIngredient.Amount = ingredient.Amount;
-                    newIngredient.Name = ingredient.Name;
-                    newIngredient.RecipeID = storedRecipe.ID;
-                    newIngredient.Type = ingredient.Type;
-                    newIngredient.Unit = ingredient.Unit;
+                //foreach (var ingredient in recipe.Ingredients)
+                //{
+                //    var newIngredient = new Ingredient();
+                //    newIngredient.Amount = ingredient.Amount;
+                //    newIngredient.Name = ingredient.Name;
+                //    newIngredient.RecipeID = storedRecipe.ID;
+                //    newIngredient.Type = ingredient.Type;
+                //    newIngredient.Unit = ingredient.Unit;
 
-                    var tempIngredient = await _ingredientRepository.AddAsync(newIngredient);
-                    newIngredient.ID = tempIngredient.ID;
+                //    var tempIngredient = await _ingredientRepository.AddAsync(newIngredient);
+                //    newIngredient.ID = tempIngredient.ID;
 
-                    log.Debug($"Adding {newIngredient.Name} step to recipe {recipe.Name}");
-                    storedRecipe.Ingredients.Add(newIngredient);
-                }
+                //    log.Debug($"Adding {newIngredient.Name} step to recipe {recipe.Name}");
+                //    storedRecipe.Ingredients.Add(newIngredient);
+                //}
 
                 foreach (var step in recipe.Steps)
                 {
@@ -89,6 +89,23 @@ namespace homebrewAppServerAPI.Services
                     newStep.RecipeID = storedRecipe.ID;
                     newStep.Description = step.Description;
                     newStep.Timer = step.Timer;
+
+                    foreach (var ingredient in step.Ingredients)
+                    {
+                        var newIngredient = new Ingredient();
+                        newIngredient.Amount = ingredient.Amount;
+                        newIngredient.Name = ingredient.Name;
+                        newIngredient.RecipeStepID = step.ID;
+                        newIngredient.Type = ingredient.Type;
+                        newIngredient.Unit = ingredient.Unit;
+
+                        var tempIngredient = await _ingredientRepository.AddAsync(newIngredient);
+                        newIngredient.ID = tempIngredient.ID;
+
+                        log.Debug($"Adding {newIngredient.Name} step to recipe {recipe.Name} under step {newStep.Description}");
+                        //storedRecipe.Ingredients.Add(newIngredient);
+                        newStep.Ingredients.Add(newIngredient);
+                    }
 
                     var tempRecipeStep = await _recipeStepRepository.AddAsync(newStep);
                     newStep.ID = tempRecipeStep.ID;
@@ -127,42 +144,42 @@ namespace homebrewAppServerAPI.Services
             existingRecipe.WaterProfileID = updatedRecipe.WaterProfileID;
             existingRecipe.ExpectedABV = updatedRecipe.ExpectedABV;
 
-            // Remove any ingredient no longer included
-            foreach (var existingIngredient in existingRecipe.Ingredients)
-            {
-                var foundIngredient = updatedRecipe.Ingredients.FirstOrDefault(i => i.ID == existingIngredient.ID);
+            //// Remove any ingredient no longer included
+            //foreach (var existingIngredient in existingRecipe.Ingredients)
+            //{
+            //    var foundIngredient = updatedRecipe.Ingredients.FirstOrDefault(i => i.ID == existingIngredient.ID);
 
-                if (foundIngredient == null)
-                {
-                    log.Debug($"Removing ingredient with ID {existingIngredient.ID}");
-                    _ingredientRepository.Remove(existingIngredient);
-                }
-            }
+            //    if (foundIngredient == null)
+            //    {
+            //        log.Debug($"Removing ingredient with ID {existingIngredient.ID}");
+            //        _ingredientRepository.Remove(existingIngredient);
+            //    }
+            //}
 
-            foreach (var ingredient in updatedRecipe.Ingredients)
-            {
-                var existingIngredient = await _ingredientRepository.FindByIdAsync(ingredient.ID);
+            //foreach (var ingredient in updatedRecipe.Ingredients)
+            //{
+            //    var existingIngredient = await _ingredientRepository.FindByIdAsync(ingredient.ID);
 
-                if (existingIngredient != null)
-                {
-                    existingIngredient.Amount = ingredient.Amount;
-                    existingIngredient.Name = ingredient.Name;
-                    existingIngredient.Type = ingredient.Type;
-                    existingIngredient.Unit = ingredient.Unit;
+            //    if (existingIngredient != null)
+            //    {
+            //        existingIngredient.Amount = ingredient.Amount;
+            //        existingIngredient.Name = ingredient.Name;
+            //        existingIngredient.Type = ingredient.Type;
+            //        existingIngredient.Unit = ingredient.Unit;
 
-                    log.Debug($"Ensuring the existing ingredient with ID {existingIngredient.ID}, matches details entered");
-                    _ingredientRepository.Update(existingIngredient);
-                    await _unitOfWork.CompleteAsync();
-                }
-                else
-                {
-                    // Got to add the ingredient before we can store it in the Recipe
-                    log.Debug($"Adding new ingredient {ingredient.Name}");
-                    ingredient.RecipeID = id;
-                    var tempIng = await _ingredientRepository.AddAsync(ingredient);
-                    ingredient.ID = tempIng.ID;
-                }
-            }
+            //        log.Debug($"Ensuring the existing ingredient with ID {existingIngredient.ID}, matches details entered");
+            //        _ingredientRepository.Update(existingIngredient);
+            //        await _unitOfWork.CompleteAsync();
+            //    }
+            //    else
+            //    {
+            //        // Got to add the ingredient before we can store it in the Recipe
+            //        log.Debug($"Adding new ingredient {ingredient.Name}");
+            //        ingredient.RecipeID = id;
+            //        var tempIng = await _ingredientRepository.AddAsync(ingredient);
+            //        ingredient.ID = tempIng.ID;
+            //    }
+            //}
 
             // Remove any step no longer included
             foreach (var existingStep in existingRecipe.Steps)
@@ -184,6 +201,43 @@ namespace homebrewAppServerAPI.Services
                 {
                     existingRecipeStep.Description = recipeStep.Description;
                     existingRecipeStep.Timer = recipeStep.Timer;
+
+                    // Remove any ingredient no longer included
+                    foreach (var existingIngredient in existingRecipeStep.Ingredients)
+                    {
+                        var foundIngredient = recipeStep.Ingredients.FirstOrDefault(i => i.ID == existingIngredient.ID);
+
+                        if (foundIngredient == null)
+                        {
+                            log.Debug($"Removing ingredient with ID {existingIngredient.ID}");
+                            _ingredientRepository.Remove(existingIngredient);
+                        }
+                    }
+
+                    foreach (var ingredient in recipeStep.Ingredients)
+                    {
+                        var existingIngredient = await _ingredientRepository.FindByIdAsync(ingredient.ID);
+
+                        if (existingIngredient != null)
+                        {
+                            existingIngredient.Amount = ingredient.Amount;
+                            existingIngredient.Name = ingredient.Name;
+                            existingIngredient.Type = ingredient.Type;
+                            existingIngredient.Unit = ingredient.Unit;
+
+                            log.Debug($"Ensuring the existing ingredient with ID {existingIngredient.ID}, matches details entered");
+                            _ingredientRepository.Update(existingIngredient);
+                            await _unitOfWork.CompleteAsync();
+                        }
+                        else
+                        {
+                            // Got to add the ingredient before we can store it in the Recipe
+                            log.Debug($"Adding new ingredient {ingredient.Name}");
+                            ingredient.RecipeStepID = recipeStep.ID;
+                            var tempIng = await _ingredientRepository.AddAsync(ingredient);
+                            ingredient.ID = tempIng.ID;
+                        }
+                    }
 
                     log.Debug($"Ensuring the existing step with ID {existingRecipeStep.ID}, matches details entered");
                     _recipeStepRepository.Update(existingRecipeStep);

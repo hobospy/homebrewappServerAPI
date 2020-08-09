@@ -9,7 +9,7 @@ namespace homebrewAppServerAPI.Domain.Repositories
         Task<IEnumerable<RecipeStep>> ListAsync();
         Task<RecipeStep> AddAsync(RecipeStep recipeStep);
         Task<RecipeStep> FindByIdAsync(int id);
-        void Update(RecipeStep recipeStep);
+        Task<RecipeStep> Update(RecipeStep recipeStep);
         void Remove(RecipeStep recipeStep);
     }
 }

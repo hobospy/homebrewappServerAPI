@@ -31,7 +31,7 @@ namespace homebrewAppServerAPI.Controllers
             _mapper = mapper;
         }
 
-        // GET: Brew/Summary
+        // GET: Ingredient/Summary
         [HttpGet]
         [Route("Summary")]
         public async Task<IEnumerable<IngredientResource>> GetAllIngredientsAsync()

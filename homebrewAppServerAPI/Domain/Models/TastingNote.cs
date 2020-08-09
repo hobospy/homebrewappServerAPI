@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
@@ -6,21 +6,25 @@ using System.Text.Json.Serialization;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
-    public class RecipeStep
+    public class TastingNote
     {
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public string Description { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
-        public Timer Timer { get; set; }
 
+        [Required]
+        [StringLength(1000)]
+        public string Note { get; set; }
 
-        public int RecipeID { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime Date { get; set; }
+
+        public int BrewID { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
-        [ForeignKey("RecipeID")]
-        public Recipe Recipe { get; set; }
+        [ForeignKey("BrewID")]
+        public Brew Brew { get; set; }
     }
 }

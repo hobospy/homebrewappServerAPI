@@ -22,7 +22,6 @@ namespace homebrewAppServerAPI.Domain.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        //[JsonIgnore]
         public IList<RecipeStep> Steps { get; set; }
 
         [Required]
@@ -30,7 +29,7 @@ namespace homebrewAppServerAPI.Domain.Models
 
         public double ExpectedABV { get; set; }
 
-        public IList<Ingredient> Ingredients { get; set; }
+        //public IList<Ingredient> Ingredients { get; set; }
         public IList<Brew> Brews { get; set; }
 
         public int WaterProfileID { get; set; }

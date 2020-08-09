@@ -1,5 +1,6 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace homebrewAppServerAPI.Persistence.Contexts
 {
@@ -11,6 +12,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<WaterProfileAddition> WaterProfileAdditons { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<TastingNote> TastingNotes { get; set; }
+        public DbSet<Timer> Timers { get; set; }
 
         public SqliteDbContext(DbContextOptions<SqliteDbContext> options) : base(options) { }
 
@@ -131,19 +134,23 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         }
                     );
 
+                builder.Entity<Timer>().HasData
+                    (
+                    new Timer { ID = 1, Duration = 3705, Type = ETypeOfDuration.independent, RecipeStepID=9000 },
+                    new Timer { ID = 2, Duration = 2, Type = ETypeOfDuration.independent, RecipeStepID = 9001 }
+                    );
+
                 builder.Entity<RecipeStep>().HasData(
                         new RecipeStep
                         {
                             ID = 9000,
                             Description = "Add grain and mash in",
-                            Timer = 5,
                             RecipeID = 2001
                         },
                         new RecipeStep
                         {
                             ID = 9001,
                             Description = "Mash out and get to boil",
-                            Timer = 15,
                             RecipeID = 2001
                         }
                     );
@@ -154,9 +161,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         {
                             ID = 3000,
                             Name = "Brothers Kolsch Ripoff I",
-                            BrewDate = new System.DateTime(2019, 11, 13),
+                            BrewDate = new DateTime(2019, 11, 13),
                             ABV = 5.5,
-                            TastingNotes = "Not a million miles away from the real thing!",
                             RecipeID = 2000,
                             Rating = 2.3
                         },
@@ -164,9 +170,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         {
                             ID = 3001,
                             Name = "Brothers Kolsch Ripoff II",
-                            BrewDate = new System.DateTime(2019, 12, 24),
+                            BrewDate = new DateTime(2019, 12, 24),
                             ABV = 4.9,
-                            TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.",
                             RecipeID = 2000,
                             Rating = 4.7
                         },
@@ -174,21 +179,28 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         {
                             ID = 3002,
                             Name = "Amarillo SMaSH I",
-                            BrewDate = new System.DateTime(2020, 02, 07),
+                            BrewDate = new DateTime(2020, 02, 07),
                             ABV = 4.7,
-                            TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)",
                             RecipeID = 2001
                         },
                         new Brew
                         {
                             ID = 3003,
                             Name = "Brothers Kolsch Ripoff III",
-                            BrewDate = new System.DateTime(2020, 02, 21),
+                            BrewDate = new DateTime(2020, 02, 21),
                             ABV = 4.7,
-                            TastingNotes = "Nice clean flavour with a reasonably strong aroma and good clarity",
                             RecipeID = 2000,
                             Rating = 5.0
                         }
+                    );
+
+                builder.Entity<TastingNote>().HasData
+                    (
+                        new TastingNote { ID = 2000, Note = "Not a million miles away from the real thing!", Date = DateTime.Now, BrewID = 3000 },
+                        new TastingNote { ID = 2001, Note = "Yep, this one isn't great, there is an odd metalic taste associated with it.", Date = new DateTime(2019, 6, 24), BrewID = 3001 },
+                        new TastingNote { ID = 2002, Note = "Cool, think I have found a house brew I can easily do and drink :)", Date = new DateTime(2020, 3, 2), BrewID = 3002 },
+                        new TastingNote { ID = 2004, Note = "The taste of this improves after a few weeks", Date = new DateTime(2020, 3, 27), BrewID = 3002 },
+                        new TastingNote { ID = 2003, Note = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week", Date = DateTime.Now, BrewID = 3003 }
                     );
 
                 builder.Entity<Ingredient>().HasData
@@ -199,7 +211,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Type = ETypeOfIngredient.Grains,
                             Amount = 5.5,
                             Unit = EUnitOfMeasure.kilo,
-                            RecipeID = 2001
+                            RecipeStepID = 9000
                         },
                         new Ingredient
                         {
@@ -208,7 +220,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Type = ETypeOfIngredient.Grains,
                             Amount = 0.3,
                             Unit = EUnitOfMeasure.kilo,
-                            RecipeID = 2001
+                            RecipeStepID = 9000
                         },
                         new Ingredient
                         {
@@ -217,7 +229,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Type = ETypeOfIngredient.Grains,
                             Amount = 0.2,
                             Unit = EUnitOfMeasure.kilo,
-                            RecipeID = 2001
+                            RecipeStepID = 9000
                         },
                         new Ingredient
                         {
@@ -226,7 +238,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Type = ETypeOfIngredient.Hops,
                             Amount = 65,
                             Unit = EUnitOfMeasure.gram,
-                            RecipeID = 2001
+                            RecipeStepID = 9001
                         }
                     );
             }

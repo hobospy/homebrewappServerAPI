@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Domain.Models
@@ -58,7 +59,7 @@ namespace homebrewAppServerAPI.Domain.Models
         KolschAlt
     }
 
-    public enum ETypeOfIngredient
+    public enum ETypeOfIngredient : short
     {
         [Description("Grains")]
         Grains,
@@ -67,6 +68,19 @@ namespace homebrewAppServerAPI.Domain.Models
         [Description("Adjuncts")]
         Adjuncts
     }
+
+    //[DataContract]
+    //public enum EUnitOfMeasure
+    //{
+    //    [EnumMember(Value = "kg")]
+    //    kilo = 0,
+    //    [EnumMember(Value = "g")]
+    //    gram,
+    //    [EnumMember(Value = "l")]
+    //    litre = 100,
+    //    [EnumMember(Value = "ml")]
+    //    millilitre
+    //}
 
     public enum EUnitOfMeasure
     {
@@ -78,5 +92,15 @@ namespace homebrewAppServerAPI.Domain.Models
         litre = 100,
         [Description("ml")]
         millilitre
+    }
+
+    public enum ETypeOfDuration
+    {
+        [Description("Independent")]
+        independent = 0,
+        [Description("Before flameout")]
+        beforeFlameout,
+        [Description("After flameout")]
+        afterFlameout
     }
 }

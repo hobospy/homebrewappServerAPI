@@ -1,26 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
-    public class RecipeStep
+    public class Timer
     {
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public string Description { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
-        public Timer Timer { get; set; }
 
+        [Required]
+        public long Duration { get; set; }
 
-        public int RecipeID { get; set; }
+        [Required]
+        public ETypeOfDuration Type { get; set; }
+
+        public int RecipeStepID { get; set; }
         [JsonIgnore]
         [IgnoreDataMember]
-        [ForeignKey("RecipeID")]
-        public Recipe Recipe { get; set; }
+        [ForeignKey("RecipeStepID")]
+        public RecipeStep RecipeStep { get; set; }
     }
 }

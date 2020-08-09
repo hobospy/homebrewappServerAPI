@@ -20,13 +20,20 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             return await _context.Brews
                                     .Include(p => p.Recipe)
                                     .Include(p => p.Recipe.WaterProfile)
-                                    .Include(p => p.Recipe.Ingredients)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Timer)
+                                    .Include(p => p.TastingNotes)
                                     .ToListAsync();
         }
 
-        public async Task AddAsync(Brew brew)
+        public async Task<Brew> AddAsync(Brew brew)
         {
-            await _context.Brews.AddAsync(brew);
+            _context.Brews.Add(brew);
+            _context.SaveChanges();
+
+            await _context.Entry(brew).GetDatabaseValuesAsync();
+            
+            return brew;
         }
 
         public async Task<Brew> FindByIdAsync(int id)
@@ -34,13 +41,24 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             return await _context.Brews
                                     .Include(p => p.Recipe)
                                     .Include(p => p.Recipe.WaterProfile)
-                                    .Include(p => p.Recipe.Ingredients)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Timer)
+                                    .Include(p => p.TastingNotes)
                                     .FirstOrDefaultAsync(brew => brew.ID == id);
         }
 
-        public void Update(Brew brew)
+        public async Task<Brew> Update(Brew brew)
         {
             _context.Brews.Update(brew);
+            await _context.SaveChangesAsync();
+
+            return await _context.Brews
+                                    .Include(p => p.Recipe)
+                                    .Include(p => p.Recipe.WaterProfile)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Recipe.Steps).ThenInclude(w => w.Timer)
+                                    .Include(p => p.TastingNotes)
+                                    .FirstOrDefaultAsync(brewToFind => brewToFind.ID == brew.ID);
         }
 
         public void Remove(Brew brew)

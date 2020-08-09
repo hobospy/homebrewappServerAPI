@@ -13,9 +13,9 @@ namespace homebrewAppServerAPI.Resources
         public double ExpectedABV { get; set; }
         public WaterProfileResource WaterProfile { get; set; }
 
-        public List<IngredientResource> Ingredients { get; set; }
+        //public List<IngredientResource> Ingredients { get; set; }
 
 
-        public List<RecipeStep> Steps { get; set; }
+        public IList<RecipeStepResource> Steps { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,8 +19,12 @@ namespace homebrewAppServerAPI.Domain.Models
         [DataType(DataType.Date)]
         public DateTime BrewDate { get; set; }
 
-        [StringLength(1000)]
-        public string TastingNotes { get; set; }
+        public bool Brewed { get; set; } = false;
+
+        [StringLength(2000)]
+        public string BrewingNotes { get; set; }
+
+        public IList<TastingNote> TastingNotes { get; set; }
 
         [Required]
         public double ABV { get; set; }

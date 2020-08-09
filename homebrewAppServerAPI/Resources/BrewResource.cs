@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace homebrewAppServerAPI.Resources
 {
@@ -7,8 +8,10 @@ namespace homebrewAppServerAPI.Resources
         public int ID { get; set; }
         public string Name { get; set; }
         public DateTime BrewDate { get; set; }
+        public bool Brewed { get; set; } = false;
+        public string BrewingNotes { get; set; }
         public double ABV { get; set; }
-        public string TastingNotes { get; set; }
+        public List<TastingNoteResource> TastingNotes { get; set; }
         public double Rating { get; set; }
 
         public RecipeResource Recipe { get; set; }

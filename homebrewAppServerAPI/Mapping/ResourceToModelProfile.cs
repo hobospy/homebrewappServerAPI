@@ -11,7 +11,10 @@ namespace homebrewAppServerAPI.Mapping
     {
         public ResourceToModelProfile()
         {
-            CreateMap<RecipeStepResource, RecipeStep>();
+
+            CreateMap<TastingNoteResource, TastingNote>();
+
+            CreateMap<NewTastingNoteResource, TastingNote>();
 
             CreateMap<IngredientResource, Ingredient>()
                 .ForMember(src => src.Type,
@@ -31,15 +34,29 @@ namespace homebrewAppServerAPI.Mapping
             
             CreateMap<WaterProfileResource, WaterProfile>();
 
+            CreateMap<TimerResource, Timer>()
+                .ForMember(dest => dest.Type,
+                           opt => opt.MapFrom(source => Enum.GetValues(typeof(ETypeOfDuration))
+                                                            .Cast<ETypeOfDuration>()
+                                                            .FirstOrDefault(v => string.Equals(v.ToDescriptionString(), source.Type, StringComparison.OrdinalIgnoreCase))));
+
+            CreateMap<RecipeStepResource, RecipeStep>();
+
+            CreateMap<RecipeResource, Recipe>();
+
             CreateMap<UpdateRecipeResource, Recipe>()
                 .ForMember(r => r.Type,
                            op => op.MapFrom(source => Enum.GetValues(typeof(ETypeOfBeer))
                                                           .Cast<ETypeOfBeer>()
                                                           .FirstOrDefault(v => string.Equals(v.ToDescriptionString(), source.Type, StringComparison.OrdinalIgnoreCase))))
-                .ForMember(src => src.Ingredients,
-                           opt => opt.MapFrom(src => src.Ingredients));
+                .ForMember(src => src.Steps,
+                           opt => opt.MapFrom(src => src.Steps));
 
-            CreateMap<SaveBrewResource, Brew>();
+            CreateMap<BrewResource, Brew>();
+
+            CreateMap<NewBrewResource, Brew>();
+
+            CreateMap<NewTastingNoteResource, TastingNote>();
         }
     }
 }

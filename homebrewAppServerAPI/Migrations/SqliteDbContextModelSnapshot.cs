@@ -28,6 +28,13 @@ namespace homebrewAppServerAPI.Migrations
                     b.Property<DateTime>("BrewDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Brewed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BrewingNotes")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(2000);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT")
@@ -38,10 +45,6 @@ namespace homebrewAppServerAPI.Migrations
 
                     b.Property<int>("RecipeID")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("TastingNotes")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(1000);
 
                     b.HasKey("ID");
 
@@ -55,40 +58,40 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 3000,
                             ABV = 5.5,
                             BrewDate = new DateTime(2019, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Brewed = false,
                             Name = "Brothers Kolsch Ripoff I",
                             Rating = 2.2999999999999998,
-                            RecipeID = 2000,
-                            TastingNotes = "Not a million miles away from the real thing!"
+                            RecipeID = 2000
                         },
                         new
                         {
                             ID = 3001,
                             ABV = 4.9000000000000004,
                             BrewDate = new DateTime(2019, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Brewed = false,
                             Name = "Brothers Kolsch Ripoff II",
                             Rating = 4.7000000000000002,
-                            RecipeID = 2000,
-                            TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it."
+                            RecipeID = 2000
                         },
                         new
                         {
                             ID = 3002,
                             ABV = 4.7000000000000002,
                             BrewDate = new DateTime(2020, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Brewed = false,
                             Name = "Amarillo SMaSH I",
                             Rating = 0.0,
-                            RecipeID = 2001,
-                            TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)"
+                            RecipeID = 2001
                         },
                         new
                         {
                             ID = 3003,
                             ABV = 4.7000000000000002,
                             BrewDate = new DateTime(2020, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Brewed = false,
                             Name = "Brothers Kolsch Ripoff III",
                             Rating = 5.0,
-                            RecipeID = 2000,
-                            TastingNotes = "Nice clean flavour with a reasonably strong aroma and good clarity"
+                            RecipeID = 2000
                         });
                 });
 
@@ -106,10 +109,10 @@ namespace homebrewAppServerAPI.Migrations
                         .HasColumnType("TEXT")
                         .HasMaxLength(50);
 
-                    b.Property<int>("RecipeID")
+                    b.Property<int>("RecipeStepID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Type")
+                    b.Property<short>("Type")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Unit")
@@ -117,7 +120,7 @@ namespace homebrewAppServerAPI.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("RecipeID");
+                    b.HasIndex("RecipeStepID");
 
                     b.ToTable("Ingredients");
 
@@ -127,8 +130,8 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 7001,
                             Amount = 5.5,
                             Name = "Pale ale",
-                            RecipeID = 2001,
-                            Type = 0,
+                            RecipeStepID = 9000,
+                            Type = (short)0,
                             Unit = 0
                         },
                         new
@@ -136,8 +139,8 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 7002,
                             Amount = 0.29999999999999999,
                             Name = "Wheat malt",
-                            RecipeID = 2001,
-                            Type = 0,
+                            RecipeStepID = 9000,
+                            Type = (short)0,
                             Unit = 0
                         },
                         new
@@ -145,8 +148,8 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 7003,
                             Amount = 0.20000000000000001,
                             Name = "Light crystal malt",
-                            RecipeID = 2001,
-                            Type = 0,
+                            RecipeStepID = 9000,
+                            Type = (short)0,
                             Unit = 0
                         },
                         new
@@ -154,8 +157,8 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 7004,
                             Amount = 65.0,
                             Name = "Amarillo",
-                            RecipeID = 2001,
-                            Type = 1,
+                            RecipeStepID = 9001,
+                            Type = (short)1,
                             Unit = 1
                         });
                 });
@@ -259,9 +262,6 @@ namespace homebrewAppServerAPI.Migrations
                     b.Property<int>("RecipeID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Timer")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ID");
 
                     b.HasIndex("RecipeID");
@@ -273,15 +273,113 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 9000,
                             Description = "Add grain and mash in",
-                            RecipeID = 2001,
-                            Timer = 5
+                            RecipeID = 2001
                         },
                         new
                         {
                             ID = 9001,
                             Description = "Mash out and get to boil",
-                            RecipeID = 2001,
-                            Timer = 15
+                            RecipeID = 2001
+                        });
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.TastingNote", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BrewID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(1000);
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BrewID");
+
+                    b.ToTable("TastingNotes");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 2000,
+                            BrewID = 3000,
+                            Date = new DateTime(2020, 8, 3, 16, 51, 6, 766, DateTimeKind.Local).AddTicks(6482),
+                            Note = "Not a million miles away from the real thing!"
+                        },
+                        new
+                        {
+                            ID = 2001,
+                            BrewID = 3001,
+                            Date = new DateTime(2019, 6, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Note = "Yep, this one isn't great, there is an odd metalic taste associated with it."
+                        },
+                        new
+                        {
+                            ID = 2002,
+                            BrewID = 3002,
+                            Date = new DateTime(2020, 3, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Note = "Cool, think I have found a house brew I can easily do and drink :)"
+                        },
+                        new
+                        {
+                            ID = 2004,
+                            BrewID = 3002,
+                            Date = new DateTime(2020, 3, 27, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Note = "The taste of this improves after a few weeks"
+                        },
+                        new
+                        {
+                            ID = 2003,
+                            BrewID = 3003,
+                            Date = new DateTime(2020, 8, 3, 16, 51, 6, 769, DateTimeKind.Local).AddTicks(4257),
+                            Note = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week"
+                        });
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.Timer", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Duration")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RecipeStepID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RecipeStepID")
+                        .IsUnique();
+
+                    b.ToTable("Timers");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Duration = 3705L,
+                            RecipeStepID = 9000,
+                            Type = 0
+                        },
+                        new
+                        {
+                            ID = 2,
+                            Duration = 2L,
+                            RecipeStepID = 9001,
+                            Type = 0
                         });
                 });
 
@@ -396,9 +494,9 @@ namespace homebrewAppServerAPI.Migrations
 
             modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.Ingredient", b =>
                 {
-                    b.HasOne("homebrewAppServerAPI.Domain.Models.Recipe", "Recipe")
+                    b.HasOne("homebrewAppServerAPI.Domain.Models.RecipeStep", "RecipeStep")
                         .WithMany("Ingredients")
-                        .HasForeignKey("RecipeID")
+                        .HasForeignKey("RecipeStepID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -417,6 +515,24 @@ namespace homebrewAppServerAPI.Migrations
                     b.HasOne("homebrewAppServerAPI.Domain.Models.Recipe", "Recipe")
                         .WithMany("Steps")
                         .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.TastingNote", b =>
+                {
+                    b.HasOne("homebrewAppServerAPI.Domain.Models.Brew", "Brew")
+                        .WithMany("TastingNotes")
+                        .HasForeignKey("BrewID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("homebrewAppServerAPI.Domain.Models.Timer", b =>
+                {
+                    b.HasOne("homebrewAppServerAPI.Domain.Models.RecipeStep", "RecipeStep")
+                        .WithOne("Timer")
+                        .HasForeignKey("homebrewAppServerAPI.Domain.Models.Timer", "RecipeStepID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -27,6 +27,8 @@ namespace homebrewAppServerAPI
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        public static readonly ILoggerFactory MyLoggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
@@ -75,6 +77,8 @@ namespace homebrewAppServerAPI
                     options.EnableSensitiveDataLogging();
 #endif
                     options.UseSqlite("Data Source=./homebrew.db");
+
+                    options.UseLoggerFactory(MyLoggerFactory);
                 });
 #else
                 log.Debug("Using EF in memory data source");
@@ -84,11 +88,13 @@ namespace homebrewAppServerAPI
                 });
 #endif
                 log.Debug("Adding services");
+                services.AddScoped<ITastingNoteRepository, TastingNoteRepository>();
                 services.AddScoped<IIngredientRepository, IngredientRepository>();
                 services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
                 services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
                 services.AddScoped<IRecipeRepository, RecipeRepository>();
                 services.AddScoped<IBrewRepository, BrewRepository>();
+                services.AddScoped<ITastingNoteService, TastingNoteService>();
                 services.AddScoped<IIngredientService, IngredientService>();
                 services.AddScoped<IRecipeStepService, RecipeStepService>();
                 services.AddScoped<IWaterProfileService, WaterProfileService>();

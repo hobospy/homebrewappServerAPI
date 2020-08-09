@@ -3,6 +3,7 @@ using homebrewAppServerAPI.Domain.Models;
 using homebrewAppServerAPI.Domain.Repositories;
 using homebrewAppServerAPI.Domain.Services;
 using homebrewAppServerAPI.Domain.Services.Communication;
+using homebrewAppServerAPI.Helpers;
 using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace homebrewAppServerAPI.Services
 {
     public class BrewService : IBrewService
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly IBrewRepository _brewRepository;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -42,23 +45,23 @@ namespace homebrewAppServerAPI.Services
 
         public async Task<BrewResponse> SaveAsync(Brew brew)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with brew {brew.Name}");
+
             try
             {
-                BrewResponse returnValue;
+                var newBrew = new Brew();
+                newBrew.Name = brew.Name;
+                newBrew.RecipeID = brew.RecipeID;
+                newBrew.BrewDate = brew.BrewDate;
 
-                if (brew != null)
-                {
-                    await _brewRepository.AddAsync(brew);
-                    await _unitOfWork.CompleteAsync();
+                var storedBrew = await _brewRepository.AddAsync(newBrew);
 
-                    returnValue = new BrewResponse(brew);
-                }
-                else
+                if (storedBrew != null)
                 {
-                    throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Cannot save a null brew");
+                    storedBrew = await _brewRepository.FindByIdAsync(storedBrew.ID);
                 }
 
-                return returnValue;
+                return new BrewResponse(storedBrew);
             }
             catch (Exception ex)
             {
@@ -94,8 +97,13 @@ namespace homebrewAppServerAPI.Services
 
         public async Task<BrewResponse> PatchAsync(int id, JsonPatchDocument<Brew> patch)
         {
+            log.Debug($"Called {Helper.GetCurrentMethod()} with id {id}");
+
             if (patch == null)
             {
+                var errorMsg = "Unable to patch brew, patch information is null";
+
+                log.Debug(errorMsg);
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch brew, patch information is null");
             }
 
@@ -103,20 +111,23 @@ namespace homebrewAppServerAPI.Services
 
             if (existingBrew == null)
             {
+                log.Debug($"Unable to find a brew with id {id}");
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"Unable to patch brew, can't find a brew with ID: {id}");
             }
 
-            patch.ApplyTo(existingBrew);
-
             try
             {
-                _brewRepository.Update(existingBrew);
-                await _unitOfWork.CompleteAsync();
+                log.Debug($"Patching brew {existingBrew.Name} [{existingBrew.ID}]");
+                patch.ApplyTo(existingBrew);
+                var updatedBrew = await _brewRepository.Update(existingBrew);
 
-                return new BrewResponse(existingBrew);
+                return new BrewResponse(updatedBrew);
             }
             catch (Exception ex)
             {
+                log.Debug($"Error caught when updating the brew {existingBrew.Name}[{existingBrew.ID}] {Helper.GetCurrentMethod()}," +
+                    $" {ex.Message} - {(ex.InnerException != null ? ex.InnerException.Message : "No inner exception")}");
+
                 throw new homebrewAPIException(HttpStatusCode.BadRequest, "0", $"An error occurred when patching the brew ({existingBrew.Name}): {ex.Message}");
             }
         }

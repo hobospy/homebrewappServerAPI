@@ -19,7 +19,8 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         {
             return await _context.Recipes
                                     .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
-                                    .Include(p => p.Ingredients)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Timer)
                                     .ToListAsync();
         }
 
@@ -37,8 +38,8 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         {
             return await _context.Recipes
                                     .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
-                                    .Include(p => p.Ingredients)
-                                    .Include(p => p.Steps)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Timer)
                                     .FirstOrDefaultAsync(recipe => recipe.ID == id);
         }
 
@@ -49,7 +50,8 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
             return await _context.Recipes
                                     .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
-                                    .Include(p => p.Ingredients)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Ingredients)
+                                    .Include(p => p.Steps).ThenInclude(w => w.Timer)
                                     .FirstOrDefaultAsync(recipeToFind => recipeToFind.ID == recipe.ID);
         }
 

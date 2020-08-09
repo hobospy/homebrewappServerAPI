@@ -1,16 +1,19 @@
 ﻿using homebrewAppServerAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 
 namespace homebrewAppServerAPI.Persistence.Contexts
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<TastingNote> TastingNotes { get; set; }
         public DbSet<Brew> Brews { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeStep> RecipeSteps { get; set; }
         public DbSet<WaterProfile> WaterProfiles { get; set; }
         public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Timer> Timers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) :base(options) { }
 
@@ -52,7 +55,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                 builder.Entity<Recipe>().Property(p => p.Type).IsRequired();
                 builder.Entity<Recipe>().Property(p => p.Description).IsRequired().HasMaxLength(500);
                 builder.Entity<Recipe>().HasMany(p => p.Brews).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
-                builder.Entity<Recipe>().HasMany(p => p.Ingredients).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
+                builder.Entity<Recipe>().HasMany(p => p.Steps).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
+                //builder.Entity<Recipe>().HasMany(p => p.Ingredients).WithOne(p => p.Recipe).HasForeignKey(p => p.RecipeID);
 
                 builder.Entity<Recipe>().HasData
                     (
@@ -107,6 +111,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                 builder.Entity<Brew>().Property(p => p.Name).IsRequired().HasMaxLength(50);
                 builder.Entity<Brew>().Property(p => p.BrewDate).IsRequired();
                 builder.Entity<Brew>().Property(p => p.ABV).IsRequired();
+                builder.Entity<Brew>().HasMany(p => p.TastingNotes).WithOne(p => p.Brew).HasForeignKey(p => p.BrewID);
 
                 builder.Entity<Brew>().HasData
                     (
@@ -116,7 +121,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Brothers Kolsch Ripoff I",
                             BrewDate = new System.DateTime(2019, 11, 13),
                             ABV = 5.5,
-                            TastingNotes = "Not a million miles away from the real thing!",
                             RecipeID = 2000,
                             Rating = 2.3
                         },
@@ -126,7 +130,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Brothers Kolsch Ripoff II",
                             BrewDate = new System.DateTime(2019, 12, 24),
                             ABV = 5.08,
-                            TastingNotes = "Yep, this one isn't great, there is an odd metalic taste associated with it.",
                             RecipeID = 2000,
                             Rating = 4.7
                         },
@@ -136,7 +139,6 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Amarillo SMaSH I",
                             BrewDate = new System.DateTime(2020, 02, 07),
                             ABV = 4.7,
-                            TastingNotes = "Cool, think I have found a house brew I can easily do and drink :)",
                             RecipeID = 2001
                         },
                         new Brew
@@ -145,10 +147,23 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Brothers Kolsch Ripoff III",
                             BrewDate = new System.DateTime(2020, 2, 8),
                             ABV = 4.7,
-                            TastingNotes = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week",
                             RecipeID = 2000,
                             Rating = 5.0
                         }
+                    );
+
+                builder.Entity<TastingNote>().ToTable("TastingNotes");
+                builder.Entity<TastingNote>().HasKey(p => p.ID);
+                builder.Entity<TastingNote>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
+                builder.Entity<TastingNote>().Property(p => p.Note).IsRequired();
+                builder.Entity<TastingNote>().Property(p => p.Date).IsRequired();
+                builder.Entity<TastingNote>().HasData
+                    (
+                        new TastingNote { ID = 2000, Note = "Not a million miles away from the real thing!", Date = DateTime.Now, BrewID = 3000 },
+                        new TastingNote { ID = 2001, Note = "Yep, this one isn't great, there is an odd metalic taste associated with it.", Date = new DateTime(2019, 6, 24), BrewID = 3001 },
+                        new TastingNote { ID = 2002, Note = "Cool, think I have found a house brew I can easily do and drink :)", Date = new DateTime(2020, 3, 2), BrewID = 3002 },
+                        new TastingNote { ID = 2004, Note = "The taste of this improves after a few weeks", Date = new DateTime(2020, 3, 27), BrewID = 3002 },
+                        new TastingNote { ID = 2003, Note = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week", Date = DateTime.Now, BrewID = 3003 }
                     );
 
                 builder.Entity<Ingredient>().ToTable("Ingredients");
@@ -160,9 +175,20 @@ namespace homebrewAppServerAPI.Persistence.Contexts
 
                 builder.Entity<Ingredient>().HasData
                     (
-                        new Ingredient { ID = 5000, Type = ETypeOfIngredient.Grains, Name = "Pale ale malt", Amount = 5.1, RecipeID = 2000 },
-                        new Ingredient { ID = 5001, Type = ETypeOfIngredient.Grains, Name = "Chocolate malt", Amount = 0.1, RecipeID = 2000 },
-                        new Ingredient { ID = 5002, Type = ETypeOfIngredient.Hops, Name = "Amarillo", Amount = 0.04, RecipeID = 2000 }
+                        new Ingredient { ID = 5000, Type = ETypeOfIngredient.Grains, Name = "Pale ale malt", Amount = 5.1, RecipeStepID = 9001 },
+                        new Ingredient { ID = 5001, Type = ETypeOfIngredient.Grains, Name = "Chocolate malt", Amount = 0.1, RecipeStepID = 9001 },
+                        new Ingredient { ID = 5002, Type = ETypeOfIngredient.Hops, Name = "Amarillo", Amount = 0.04, RecipeStepID = 9000 }
+                    );
+
+                builder.Entity<Timer>().ToTable("Timers");
+                builder.Entity<Timer>().HasKey(p => p.ID);
+                builder.Entity<Timer>().Property(p => p.ID).IsRequired().ValueGeneratedOnAdd();
+                builder.Entity<Timer>().Property(p => p.Duration).IsRequired();
+                builder.Entity<Timer>().Property(p => p.Type).IsRequired();
+
+                builder.Entity<Timer>().HasData (
+                        new Timer { ID = 1, Duration = 3705, Type = ETypeOfDuration.independent, RecipeStepID=9000 },
+                        new Timer { ID = 2, Duration = 2, Type = ETypeOfDuration.independent, RecipeStepID=9001 }
                     );
 
                 builder.Entity<RecipeStep>().ToTable("RecipeSteps");
@@ -175,14 +201,12 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                         {
                             ID = 9000,
                             Description = "Add grain and mash in",
-                            Timer = 5,
                             RecipeID = 2001
                         },
                         new RecipeStep
                         {
                             ID = 9001,
                             Description = "Mash out and get to boil",
-                            Timer = 15,
                             RecipeID = 2001
                         }
                     );

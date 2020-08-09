@@ -42,12 +42,18 @@ namespace homebrewAppServerAPI.Persistence.Repositories
 
         public async Task<RecipeStep> FindByIdAsync(int id)
         {
-            return await _context.RecipeSteps.FirstOrDefaultAsync(recipeStep => recipeStep.ID == id);
+            return await _context.RecipeSteps
+                                    .Include(p => p.Ingredients)
+                                    .Include(p => p.Timer)
+                                    .FirstOrDefaultAsync(recipeStep => recipeStep.ID == id);
         }
 
         public async Task<IEnumerable<RecipeStep>> ListAsync()
         {
-            return await _context.RecipeSteps.ToListAsync();
+            return await _context.RecipeSteps
+                                    .Include(p => p.Ingredients)
+                                    .Include(p => p.Timer)
+                                    .ToListAsync();
         }
 
         public void Remove(RecipeStep recipeStep)
@@ -55,9 +61,15 @@ namespace homebrewAppServerAPI.Persistence.Repositories
             _context.RecipeSteps.Remove(recipeStep);
         }
 
-        public void Update(RecipeStep recipeStep)
+        public async Task<RecipeStep> Update(RecipeStep recipeStep)
         {
             _context.RecipeSteps.Update(recipeStep);
+            await _context.SaveChangesAsync();
+
+            return await _context.RecipeSteps
+                                    .Include(p => p.Ingredients)
+                                    .Include(p => p.Timer)
+                                    .FirstOrDefaultAsync(recipeStep => recipeStep.ID == recipeStep.ID);
         }
     }
 }
