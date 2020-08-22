@@ -90,6 +90,7 @@ namespace homebrewAppServerAPI
                 log.Debug("Adding services");
                 services.AddScoped<ITastingNoteRepository, TastingNoteRepository>();
                 services.AddScoped<IIngredientRepository, IngredientRepository>();
+                services.AddScoped<ITimerRepository, TimerRepository>();
                 services.AddScoped<IRecipeStepRepository, RecipeStepRepository>();
                 services.AddScoped<IWaterProfileRepository, WaterProfileRepository>();
                 services.AddScoped<IRecipeRepository, RecipeRepository>();

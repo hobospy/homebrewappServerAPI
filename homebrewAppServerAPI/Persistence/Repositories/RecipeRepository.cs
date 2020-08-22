@@ -46,13 +46,19 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         public async Task<Recipe> Update(Recipe recipe)
         {
             _context.Recipes.Update(recipe);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
+            await _context.Entry(recipe).GetDatabaseValuesAsync();
+            _context.Entry<Recipe>(recipe).State = EntityState.Detached;
 
-            return await _context.Recipes
-                                    .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
-                                    .Include(p => p.Steps).ThenInclude(w => w.Ingredients)
-                                    .Include(p => p.Steps).ThenInclude(w => w.Timer)
-                                    .FirstOrDefaultAsync(recipeToFind => recipeToFind.ID == recipe.ID);
+            //var returnRecipe =  await _context.Recipes
+            //                        .Include(p => p.WaterProfile).ThenInclude(w => w.Additions)
+            //                        .Include(p => p.Steps).ThenInclude(w => w.Ingredients)
+            //                        .Include(p => p.Steps).ThenInclude(w => w.Timer)
+            //                        .FirstOrDefaultAsync(recipeToFind => recipeToFind.ID == recipe.ID);
+
+            var returnRecipe = await FindByIdAsync(recipe.ID);
+
+            return returnRecipe;
         }
 
         public void Remove(Recipe recipe)

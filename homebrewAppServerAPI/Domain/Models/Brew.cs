@@ -19,7 +19,7 @@ namespace homebrewAppServerAPI.Domain.Models
         [DataType(DataType.Date)]
         public DateTime BrewDate { get; set; }
 
-        public bool Brewed { get; set; } = false;
+        public EBrewedState BrewedState { get; set; } = EBrewedState.notBrewed;
 
         [StringLength(2000)]
         public string BrewingNotes { get; set; }

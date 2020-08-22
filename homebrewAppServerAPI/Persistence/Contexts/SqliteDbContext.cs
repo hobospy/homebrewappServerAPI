@@ -164,7 +164,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             BrewDate = new DateTime(2019, 11, 13),
                             ABV = 5.5,
                             RecipeID = 2000,
-                            Rating = 2.3
+                            Rating = 2.3,
+                            BrewedState = EBrewedState.brewed,
                         },
                         new Brew
                         {
@@ -173,7 +174,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             BrewDate = new DateTime(2019, 12, 24),
                             ABV = 4.9,
                             RecipeID = 2000,
-                            Rating = 4.7
+                            Rating = 4.7,
+                            BrewedState = EBrewedState.brewing,
                         },
                         new Brew
                         {
@@ -181,7 +183,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             Name = "Amarillo SMaSH I",
                             BrewDate = new DateTime(2020, 02, 07),
                             ABV = 4.7,
-                            RecipeID = 2001
+                            RecipeID = 2001,
+                            BrewedState = EBrewedState.notBrewed,
                         },
                         new Brew
                         {
@@ -190,7 +193,8 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             BrewDate = new DateTime(2020, 02, 21),
                             ABV = 4.7,
                             RecipeID = 2000,
-                            Rating = 5.0
+                            Rating = 5.0,
+                            BrewedState = EBrewedState.notBrewed,
                         }
                     );
 

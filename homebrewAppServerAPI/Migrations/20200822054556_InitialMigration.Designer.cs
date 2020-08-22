@@ -9,7 +9,7 @@ using homebrewAppServerAPI.Persistence.Contexts;
 namespace homebrewAppServerAPI.Migrations
 {
     [DbContext(typeof(SqliteDbContext))]
-    [Migration("20200803045107_InitialMigration")]
+    [Migration("20200822054556_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace homebrewAppServerAPI.Migrations
                     b.Property<DateTime>("BrewDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Brewed")
+                    b.Property<int>("BrewedState")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BrewingNotes")
@@ -60,7 +60,7 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 3000,
                             ABV = 5.5,
                             BrewDate = new DateTime(2019, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Brewed = false,
+                            BrewedState = 2,
                             Name = "Brothers Kolsch Ripoff I",
                             Rating = 2.2999999999999998,
                             RecipeID = 2000
@@ -70,7 +70,7 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 3001,
                             ABV = 4.9000000000000004,
                             BrewDate = new DateTime(2019, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Brewed = false,
+                            BrewedState = 1,
                             Name = "Brothers Kolsch Ripoff II",
                             Rating = 4.7000000000000002,
                             RecipeID = 2000
@@ -80,7 +80,7 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 3002,
                             ABV = 4.7000000000000002,
                             BrewDate = new DateTime(2020, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Brewed = false,
+                            BrewedState = 0,
                             Name = "Amarillo SMaSH I",
                             Rating = 0.0,
                             RecipeID = 2001
@@ -90,7 +90,7 @@ namespace homebrewAppServerAPI.Migrations
                             ID = 3003,
                             ABV = 4.7000000000000002,
                             BrewDate = new DateTime(2020, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Brewed = false,
+                            BrewedState = 0,
                             Name = "Brothers Kolsch Ripoff III",
                             Rating = 5.0,
                             RecipeID = 2000
@@ -313,7 +313,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2000,
                             BrewID = 3000,
-                            Date = new DateTime(2020, 8, 3, 16, 51, 6, 766, DateTimeKind.Local).AddTicks(6482),
+                            Date = new DateTime(2020, 8, 22, 17, 45, 55, 969, DateTimeKind.Local).AddTicks(6899),
                             Note = "Not a million miles away from the real thing!"
                         },
                         new
@@ -341,7 +341,7 @@ namespace homebrewAppServerAPI.Migrations
                         {
                             ID = 2003,
                             BrewID = 3003,
-                            Date = new DateTime(2020, 8, 3, 16, 51, 6, 769, DateTimeKind.Local).AddTicks(4257),
+                            Date = new DateTime(2020, 8, 22, 17, 45, 55, 972, DateTimeKind.Local).AddTicks(4418),
                             Note = "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week"
                         });
                 });

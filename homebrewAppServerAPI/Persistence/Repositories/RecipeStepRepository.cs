@@ -64,12 +64,17 @@ namespace homebrewAppServerAPI.Persistence.Repositories
         public async Task<RecipeStep> Update(RecipeStep recipeStep)
         {
             _context.RecipeSteps.Update(recipeStep);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
+            await _context.Entry(recipeStep).GetDatabaseValuesAsync();
+            _context.Entry<RecipeStep>(recipeStep).State = EntityState.Detached;
 
-            return await _context.RecipeSteps
-                                    .Include(p => p.Ingredients)
-                                    .Include(p => p.Timer)
-                                    .FirstOrDefaultAsync(recipeStep => recipeStep.ID == recipeStep.ID);
+            var returnStep = await FindByIdAsync(recipeStep.ID);
+            //return await _context.RecipeSteps
+            //                        .Include(p => p.Ingredients)
+            //                        .Include(p => p.Timer)
+            //                        .FirstOrDefaultAsync(recipeStep => recipeStep.ID == recipeStep.ID);
+
+            return returnStep;
         }
     }
 }

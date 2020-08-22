@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace homebrewAppServerAPI.Domain.Models
 {
@@ -69,19 +64,6 @@ namespace homebrewAppServerAPI.Domain.Models
         Adjuncts
     }
 
-    //[DataContract]
-    //public enum EUnitOfMeasure
-    //{
-    //    [EnumMember(Value = "kg")]
-    //    kilo = 0,
-    //    [EnumMember(Value = "g")]
-    //    gram,
-    //    [EnumMember(Value = "l")]
-    //    litre = 100,
-    //    [EnumMember(Value = "ml")]
-    //    millilitre
-    //}
-
     public enum EUnitOfMeasure
     {
         [Description("kg")]
@@ -102,5 +84,12 @@ namespace homebrewAppServerAPI.Domain.Models
         beforeFlameout,
         [Description("After flameout")]
         afterFlameout
+    }
+
+    public enum EBrewedState
+    {
+        notBrewed = 0,
+        brewing,
+        brewed
     }
 }

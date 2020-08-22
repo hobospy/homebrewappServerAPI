@@ -29,7 +29,6 @@ namespace homebrewAppServerAPI.Persistence.Repositories
                 newIngredient.Type = ingredient.Type;
                 newIngredient.Amount = ingredient.Amount;
                 newIngredient.Unit = ingredient.Unit;
-                //newIngredient.RecipeID = ingredient.RecipeID;
                 newIngredient.RecipeStepID = ingredient.RecipeStepID;
 
                 log.Debug($"Adding {ingredient.Name} ingredient basic properties");

@@ -75,7 +75,7 @@ namespace homebrewAppServerAPI.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     BrewDate = table.Column<DateTime>(nullable: false),
-                    Brewed = table.Column<bool>(nullable: false),
+                    BrewedState = table.Column<int>(nullable: false),
                     BrewingNotes = table.Column<string>(maxLength: 2000, nullable: true),
                     ABV = table.Column<double>(nullable: false),
                     Rating = table.Column<double>(nullable: false),
@@ -239,23 +239,23 @@ namespace homebrewAppServerAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Brews",
-                columns: new[] { "ID", "ABV", "BrewDate", "Brewed", "BrewingNotes", "Name", "Rating", "RecipeID" },
-                values: new object[] { 3002, 4.7000000000000002, new DateTime(2020, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "Amarillo SMaSH I", 0.0, 2001 });
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                values: new object[] { 3002, 4.7000000000000002, new DateTime(2020, 2, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, "Amarillo SMaSH I", 0.0, 2001 });
 
             migrationBuilder.InsertData(
                 table: "Brews",
-                columns: new[] { "ID", "ABV", "BrewDate", "Brewed", "BrewingNotes", "Name", "Rating", "RecipeID" },
-                values: new object[] { 3000, 5.5, new DateTime(2019, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "Brothers Kolsch Ripoff I", 2.2999999999999998, 2000 });
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                values: new object[] { 3000, 5.5, new DateTime(2019, 11, 13, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, null, "Brothers Kolsch Ripoff I", 2.2999999999999998, 2000 });
 
             migrationBuilder.InsertData(
                 table: "Brews",
-                columns: new[] { "ID", "ABV", "BrewDate", "Brewed", "BrewingNotes", "Name", "Rating", "RecipeID" },
-                values: new object[] { 3001, 4.9000000000000004, new DateTime(2019, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "Brothers Kolsch Ripoff II", 4.7000000000000002, 2000 });
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                values: new object[] { 3001, 4.9000000000000004, new DateTime(2019, 12, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, null, "Brothers Kolsch Ripoff II", 4.7000000000000002, 2000 });
 
             migrationBuilder.InsertData(
                 table: "Brews",
-                columns: new[] { "ID", "ABV", "BrewDate", "Brewed", "BrewingNotes", "Name", "Rating", "RecipeID" },
-                values: new object[] { 3003, 4.7000000000000002, new DateTime(2020, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), false, null, "Brothers Kolsch Ripoff III", 5.0, 2000 });
+                columns: new[] { "ID", "ABV", "BrewDate", "BrewedState", "BrewingNotes", "Name", "Rating", "RecipeID" },
+                values: new object[] { 3003, 4.7000000000000002, new DateTime(2020, 2, 21, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, null, "Brothers Kolsch Ripoff III", 5.0, 2000 });
 
             migrationBuilder.InsertData(
                 table: "RecipeSteps",
@@ -300,7 +300,7 @@ namespace homebrewAppServerAPI.Migrations
             migrationBuilder.InsertData(
                 table: "TastingNotes",
                 columns: new[] { "ID", "BrewID", "Date", "Note" },
-                values: new object[] { 2000, 3000, new DateTime(2020, 8, 3, 16, 51, 6, 766, DateTimeKind.Local).AddTicks(6482), "Not a million miles away from the real thing!" });
+                values: new object[] { 2000, 3000, new DateTime(2020, 8, 22, 17, 45, 55, 969, DateTimeKind.Local).AddTicks(6899), "Not a million miles away from the real thing!" });
 
             migrationBuilder.InsertData(
                 table: "TastingNotes",
@@ -310,7 +310,7 @@ namespace homebrewAppServerAPI.Migrations
             migrationBuilder.InsertData(
                 table: "TastingNotes",
                 columns: new[] { "ID", "BrewID", "Date", "Note" },
-                values: new object[] { 2003, 3003, new DateTime(2020, 8, 3, 16, 51, 6, 769, DateTimeKind.Local).AddTicks(4257), "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week" });
+                values: new object[] { 2003, 3003, new DateTime(2020, 8, 22, 17, 45, 55, 972, DateTimeKind.Local).AddTicks(4418), "Nice clean flavour with a reasonably strong aroma.  Clarity has improved over the past week" });
 
             migrationBuilder.InsertData(
                 table: "Timers",

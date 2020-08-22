@@ -22,7 +22,7 @@ namespace homebrewAppServerAPI.Resources
         [Required]
         public int WaterProfileID { get; set; }
 
-        public List<IngredientResource> Ingredients { get; set; }
+        //public List<IngredientResource> Ingredients { get; set; }
 
         public List<RecipeStepResource> Steps { get; set; }
     }

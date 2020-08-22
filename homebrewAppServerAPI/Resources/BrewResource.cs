@@ -8,7 +8,7 @@ namespace homebrewAppServerAPI.Resources
         public int ID { get; set; }
         public string Name { get; set; }
         public DateTime BrewDate { get; set; }
-        public bool Brewed { get; set; } = false;
+        public int BrewedState { get; set; }
         public string BrewingNotes { get; set; }
         public double ABV { get; set; }
         public List<TastingNoteResource> TastingNotes { get; set; }
