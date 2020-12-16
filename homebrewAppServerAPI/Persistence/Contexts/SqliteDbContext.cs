@@ -184,7 +184,7 @@ namespace homebrewAppServerAPI.Persistence.Contexts
                             BrewDate = new DateTime(2020, 02, 07),
                             ABV = 4.7,
                             RecipeID = 2001,
-                            BrewedState = EBrewedState.notBrewed,
+                            BrewedState = EBrewedState.brewing,
                         },
                         new Brew
                         {
