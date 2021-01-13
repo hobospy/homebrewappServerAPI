@@ -17,10 +17,10 @@ namespace homebrewAppServerAPI.Domain.Models
         public int ID { get; set; }
 
         [Required]
-        public long Duration { get; set; }
+        public long Duration { get; set; } = 0L;
 
         [Required]
-        public ETypeOfDuration Type { get; set; }
+        public ETypeOfDuration Type { get; set; } = ETypeOfDuration.independent;
 
         public int RecipeStepID { get; set; }
         [JsonIgnore]

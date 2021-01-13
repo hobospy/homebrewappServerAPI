@@ -6,14 +6,14 @@ namespace homebrewAppServerAPI.Persistence.Contexts
 {
     public class SqliteDbContext : DbContext
     {
-        public DbSet<Brew> Brews { get; set; }
-        public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<RecipeStep> RecipeSteps { get; set; }
-        public DbSet<WaterProfile> WaterProfiles { get; set; }
-        public DbSet<WaterProfileAddition> WaterProfileAdditons { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<TastingNote> TastingNotes { get; set; }
-        public DbSet<Timer> Timers { get; set; }
+        public virtual DbSet<Brew> Brews { get; set; }
+        public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
+        public virtual DbSet<WaterProfile> WaterProfiles { get; set; }
+        public virtual DbSet<WaterProfileAddition> WaterProfileAdditons { get; set; }
+        public virtual DbSet<Ingredient> Ingredients { get; set; }
+        public virtual DbSet<TastingNote> TastingNotes { get; set; }
+        public virtual DbSet<Timer> Timers { get; set; }
 
         public SqliteDbContext(DbContextOptions<SqliteDbContext> options) : base(options) { }
 

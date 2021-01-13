@@ -13,7 +13,7 @@ namespace homebrewAppServerAPI.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string Description { get; set; }
-        public List<Ingredient> Ingredients { get; set; }
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public Timer Timer { get; set; }
 
 
